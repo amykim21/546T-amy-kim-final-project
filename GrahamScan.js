@@ -26,6 +26,16 @@ var svg = d3.select("body")
             .attr("height", height)
             .attr("style", "border:1px solid #000000;");
 
+// var gsButton = d3.select("gsButton")
+//                 .on("onclick", function() {
+//                     console.log("button clicked");
+//                 });
+
+document.getElementById("gsButton").addEventListener("click", function() {
+    console.log("gsButton clicked");
+});
+
+
 
 d3.select("svg")
     .on("click", function() {
@@ -58,29 +68,43 @@ d3.select("svg")
     }
     console.log(points);
 
-    svg.append("line")
-    .style("stroke", "black")
-    .style("stroke-width", 5)
-    .attr("x1", x1)
-    .attr("y1", y1)
-    .attr("x2", x2)
-    .attr("y2", y2);
+    drawDashedLine(x1, y1, x2, y2);
+
+    // svg.append("line")
+    // .attr("class", "dashed")
+    // .style("stroke-dasharray", ("10, 10")) // adding this line makes it dashed
+    // // means 5 pixels draw, 5 pixels off
+    // .style("stroke", "black")
+    // .style("stroke-width", 5)
+    // .attr("x1", x1)
+    // .attr("y1", y1)
+    // .attr("x2", x2)
+    // .attr("y2", y2);
 });
 
-// d3.select("svg")
-//     .on("click", function() {
-//         const x1 = d3.mouse(this)[0];
-//         const y1 = d3.mouse(this)[1];
+function drawLine(x1, y1, x2, y2) {
+    svg.append("line")
+        .style("stroke", "black")
+        .style("stroke-width", 5)
+        .attr("x1", x1)
+        .attr("y1", y1)
+        .attr("x2", x2)
+        .attr("y2", y2);
+}
 
-//         const x2 = points[points.length-1].x;
-//         const y2 = points[points.length-1].y;
+function drawDashedLine(x1, y1, x2, y2) {
+    svg.append("line")
+        .attr("class", "dashed")
+        .style("stroke-dasharray", ("10, 10")) // adding this line makes it dashed
+        // means 5 pixels draw, 5 pixels off
+        .style("stroke", "black")
+        .style("stroke-width", 5)
+        .attr("x1", x1)
+        .attr("y1", y1)
+        .attr("x2", x2)
+        .attr("y2", y2);
+}
 
-//         console.log(points);
+function grahamNext() {
 
-//         svg.append("line")
-//         .attr("x1", x1)
-//         .attr("y1", y1)
-//         .attr("x2", x2)
-//         .attr("y2", y2);
-//     });
-
+}
