@@ -1,6 +1,8 @@
 // https://www.freecodecamp.org/news/learn-d3-js-in-5-minutes-c5ec29fb0725/
 // import * as d3 from "d3"; // not necessary it seems
 
+import { sort } from "d3";
+
 d3.select('h3').style('color', 'blue');
 d3.select('h3').style('font-size', '24px');
 
@@ -9,6 +11,7 @@ Took the skeleton of how to make a function in V3
 */
 
 var points = [];
+// var stack = [];
 var x;
 var y;
 const cr = 5;
@@ -33,6 +36,12 @@ var svg = d3.select("body")
 
 document.getElementById("gsButton").addEventListener("click", function() {
     console.log("gsButton clicked");
+
+    const lowerH = lowerHull();
+    console.log(lowerH);
+    // lowerH.forEach(hp => {
+    //     console.log(hp);
+    // });
 });
 
 
@@ -68,7 +77,7 @@ d3.select("svg")
     }
     console.log(points);
 
-    drawDashedLine(x1, y1, x2, y2);
+    drawLine(x1, y1, x2, y2);
 
     // svg.append("line")
     // .attr("class", "dashed")
@@ -105,6 +114,65 @@ function drawDashedLine(x1, y1, x2, y2) {
         .attr("y2", y2);
 }
 
-function grahamNext() {
-
+/*
+if orient() < 0, then it is a right turn
+if orient() > 0, then it is a left turn
+if orient() = 0, then straight
+*/
+function orient(p, q, r) {
+    const M = [
+        [1, 1, 1],
+        [p.x, q.x, r.x],
+        [p,y, q.y, r.y]
+    ];
+    return Math.det(M);
 }
+
+function lowerHull() {
+    var stack = []; // will contain convex hull
+    var sorted = Array.from(points); // make copy
+
+    // sort points by x-coordinate
+    sorted.sort((a, b) => {
+        return (a.x-b.x);
+    });
+
+    if(sorted.length > 1) {
+        stack.push(sorted[0]);
+        stack.push(sorted[1]);
+    } else {
+        console.log("need more points for convex hull");
+        return stack;
+    }
+
+    for(var i = 2; i < sorted.length; i++) {
+        const point = sorted[i];
+        console.log(orient(stack[stack.length-2], stack[stack.length-1], point));
+        while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
+            stack.pop();
+        }
+        stack.push(point);
+    }
+
+    return stack;
+}
+
+// function grahamNext() {
+//     // make copy of points so that user can't change it anymore
+
+//     // make empty stack
+//     var stack = [];
+
+//     // find lowest y-coordinate and leftmost point, called p0
+//     // sort points by polar angle with p0
+
+//     // for point in points:
+//         // pop the last point from the stack if we turn clockwise to reach this point:
+//         // while count stack > 1 and ccw(next_to_top(stack), top(stack), point) <= 0:
+//             // pop stack
+//         // push point to stack
+
+//     // stack will contain convex hull
+
+// }
+
