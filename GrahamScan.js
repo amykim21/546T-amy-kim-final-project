@@ -116,11 +116,11 @@ function drawDashedLine(x1, y1, x2, y2) {
         .attr("y2", y2);
 }
 
-function det(M) {
-    var d = 0;
+// function det(M) {
+//     var d = 0;
 
-    return d;
-}
+//     return d;
+// }
 
 /*
 if orient() < 0, then it is a right turn
@@ -131,9 +131,13 @@ function orient(p, q, r) {
     const M = [
         [1, 1, 1],
         [p.x, q.x, r.x],
-        [p,y, q.y, r.y]
+        [p.y, q.y, r.y]
     ];
-    return math.det(M); // ERROR: Math.det not a function
+    var det = (q.x * r.y - r.x * q.y) - (p.x * r.y - r.x * p.y) + (p.x * q.y - q.x * p.y);
+
+    return det;
+    // return math.det(M); // ERROR: Math.det not a function
+    // GrahamScan.js:136 Uncaught ReferenceError: math is not defined
 }
 
 function lowerHull() {
