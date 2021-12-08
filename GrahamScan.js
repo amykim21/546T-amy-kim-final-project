@@ -116,6 +116,12 @@ function drawDashedLine(x1, y1, x2, y2) {
         .attr("y2", y2);
 }
 
+function det(M) {
+    var d = 0;
+
+    return d;
+}
+
 /*
 if orient() < 0, then it is a right turn
 if orient() > 0, then it is a left turn
@@ -127,7 +133,7 @@ function orient(p, q, r) {
         [p.x, q.x, r.x],
         [p,y, q.y, r.y]
     ];
-    return Math.det(M);
+    return math.det(M); // ERROR: Math.det not a function
 }
 
 function lowerHull() {
