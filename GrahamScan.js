@@ -41,9 +41,12 @@ document.getElementById("gsButton").addEventListener("click", function() {
 
     const lowerH = lowerHull();
     console.log(lowerH);
-    // lowerH.forEach(hp => {
-    //     console.log(hp);
-    // });
+    for(var i = 0; i < lowerH.length-1; i++) {
+        // draw lines between lower hull points, left to right
+        drawLine(lowerH[i].x, lowerH[i].y, lowerH[i+1].x, lowerH[i+1].y);
+    }
+
+
 });
 
 
@@ -79,7 +82,7 @@ d3.select("svg")
     }
     console.log(points);
 
-    drawLine(x1, y1, x2, y2);
+    // drawLine(x1, y1, x2, y2);
 
     // svg.append("line")
     // .attr("class", "dashed")
