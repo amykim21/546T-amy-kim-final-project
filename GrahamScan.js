@@ -55,6 +55,10 @@ document.getElementById("gsButton").addEventListener("click", function() {
 
 });
 
+document.getElementById("resetButton").addEventListener("click", function() {
+    console.log("resetButton clicked");
+});
+
 
 
 d3.select("svg")
@@ -169,7 +173,7 @@ function upperHull() {
     for(var i = 2; i < sorted.length; i++) {
         const point = sorted[i];
         console.log(orient(stack[stack.length-2], stack[stack.length-1], point));
-        while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) > 0) {
+        while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
             stack.pop();
         }
         stack.push(point);
@@ -197,8 +201,8 @@ function lowerHull() {
 
     for(var i = 2; i < sorted.length; i++) {
         const point = sorted[i];
-        console.log(orient(stack[stack.length-2], stack[stack.length-1], point));
-        while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
+        console.log("lowerHull orient: " + orient(stack[stack.length-2], stack[stack.length-1], point));
+        while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) > 0) {
             stack.pop();
         }
         stack.push(point);
