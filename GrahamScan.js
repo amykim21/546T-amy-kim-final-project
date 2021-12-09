@@ -46,6 +46,12 @@ document.getElementById("gsButton").addEventListener("click", function() {
         drawLine(lowerH[i].x, lowerH[i].y, lowerH[i+1].x, lowerH[i+1].y);
     }
 
+    const upperH = upperHull();
+    console.log(upperH);
+    for(var i = 0; i < upperH.length-1; i++) {
+        // draw lines between lower hull points, left to right
+        drawLine(upperH[i].x, upperH[i].y, upperH[i+1].x, upperH[i+1].y);
+    }
 
 });
 
@@ -141,6 +147,35 @@ function orient(p, q, r) {
     return det;
     // return math.det(M); // ERROR: Math.det not a function
     // GrahamScan.js:136 Uncaught ReferenceError: math is not defined
+}
+
+function upperHull() {
+    var stack = []; // will contain convex hull
+    var sorted = Array.from(points); // make copy
+
+    // sort points by x-coordinate
+    sorted.sort((a, b) => {
+        return (a.x-b.x);
+    });
+
+    if(sorted.length > 1) {
+        stack.push(sorted[0]);
+        stack.push(sorted[1]);
+    } else {
+        console.log("need more points for convex hull");
+        return stack;
+    }
+
+    for(var i = 2; i < sorted.length; i++) {
+        const point = sorted[i];
+        console.log(orient(stack[stack.length-2], stack[stack.length-1], point));
+        while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) > 0) {
+            stack.pop();
+        }
+        stack.push(point);
+    }
+
+    return stack;
 }
 
 function lowerHull() {
