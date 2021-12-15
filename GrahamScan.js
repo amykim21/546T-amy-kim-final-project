@@ -7,6 +7,7 @@
 
 d3.select('h3').style('color', 'blue');
 d3.select('h3').style('font-size', '24px');
+d3.select('div').style('display', 'inline-block');
 
 /* https://www.tutorialsteacher.com/d3js/function-of-data-in-d3js
 Took the skeleton of how to make a function in V3
@@ -31,15 +32,16 @@ var svg = d3.select("body")
             .append("svg")
             .attr("width", width)
             .attr("height", height)
-            .attr("style", "border:1px solid #000000;")
-            .attr("display", "inline-block");
+            .attr("style", "border:1px solid #000000;");
+            // .attr("display", "inline-block");
 
 var dualSvg = d3.select("body")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
-                .attr("style", "border:1px solid #000000;")
-                .attr("display", "inline-block");
+                .attr("style", "border:1px solid #000000;");
+                // .attr("display", "inline-block");
+
 
 // var gsButton = d3.select("gsButton")
 //                 .on("onclick", function() {
