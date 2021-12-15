@@ -14,6 +14,7 @@ Took the skeleton of how to make a function in V3
 */
 
 var points = [];
+var hulls = {upperHull: [], lowerHull: []};
 var dualLines = []; // dual plane version of points
 
 // var stack = [];
@@ -61,14 +62,15 @@ document.getElementById("gsButton").addEventListener("click", function() {
     console.log(lowerH);
     for(var i = 0; i < lowerH.length-1; i++) {
         // draw lines between lower hull points, left to right
-        drawLine(lowerH[i].x, lowerH[i].y, lowerH[i+1].x, lowerH[i+1].y);
+        drawLine(lowerH[i].x, lowerH[i].y, lowerH[i+1].x, lowerH[i+1].y, "red");
+
     }
 
     const upperH = upperHull();
     console.log(upperH);
     for(var i = 0; i < upperH.length-1; i++) {
         // draw lines between lower hull points, left to right
-        drawLine(upperH[i].x, upperH[i].y, upperH[i+1].x, upperH[i+1].y);
+        drawLine(upperH[i].x, upperH[i].y, upperH[i+1].x, upperH[i+1].y, "blue");
     }
 
 });
@@ -79,6 +81,14 @@ document.getElementById("resetButton").addEventListener("click", function() {
     svg.selectAll("*").remove();
 
     points = [];
+});
+
+document.getElementById("resetButtonDualPlane").addEventListener("click", function() {
+    console.log("resetButtonDualPlane clicked");
+
+    dualSvg.selectAll("*").remove();
+
+    // dualLines = [];
 });
 
 
@@ -116,7 +126,6 @@ d3.select("svg")
     }
     console.log(points);
 
-    // drawLine(x1, y1, x2, y2);
 
     // svg.append("line")
     // .attr("class", "dashed")
@@ -140,9 +149,9 @@ function drawDualLine(coords) {
         .attr("y2", coords[3]);
 }
 
-function drawLine(x1, y1, x2, y2) {
+function drawLine(x1, y1, x2, y2, color) {
     svg.append("line")
-        .style("stroke", "black")
+        .style("stroke", color)
         .style("stroke-width", 5)
         .attr("x1", x1)
         .attr("y1", y1)
@@ -163,12 +172,6 @@ function drawDashedLine(x1, y1, x2, y2) {
         .attr("y2", y2);
 }
 
-// function det(M) {
-//     var d = 0;
-
-//     return d;
-// }
-
 /*
 if orient() < 0, then it is a right turn
 if orient() > 0, then it is a left turn
@@ -183,8 +186,6 @@ function orient(p, q, r) {
     var det = (q.x * r.y - r.x * q.y) - (p.x * r.y - r.x * p.y) + (p.x * q.y - q.x * p.y);
 
     return det;
-    // return math.det(M); // ERROR: Math.det not a function
-    // GrahamScan.js:136 Uncaught ReferenceError: math is not defined
 }
 
 function upperHull() {
@@ -212,8 +213,8 @@ function upperHull() {
         }
         stack.push(point);
     }
-
-    return stack;
+    hulls.upperHull = stack;
+    return stack; // array of points
 }
 
 function lowerHull() {
@@ -241,7 +242,7 @@ function lowerHull() {
         }
         stack.push(point);
     }
-
+    hulls.lowerHull = stack;
     return stack;
 }
 
