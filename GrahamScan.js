@@ -254,9 +254,9 @@ function convertToDualLine(slope, negY) {
     // ---note: SVG's grid has (0, 0) on the upper left; y axis flipped
     // var slope = p;
     var yIntercept = -1 * (height - negY);
-    var a1 = p;
+    var a1 = 0;
     var b1 = 0; // from bottom of the svg box; b1 = 0 stays the same
-    var a2 = p;
+    var a2 = width;
     var b2 = 0;//height; // to top of the svg box; b2 = height stays the same
 
     // calculate a
