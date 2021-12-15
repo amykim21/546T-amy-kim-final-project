@@ -251,6 +251,7 @@ function lowerHull() {
 // -----------------------------------Dual Plane----------------------------------------------
 
 function convertToDualLine(p, q) {
+    // ---note: SVG's grid has (0, 0) on the upper left; y axis flipped
     // var slope = p;
     // var yIntercept = -1 * q;
     var a1 = 0;
@@ -259,8 +260,8 @@ function convertToDualLine(p, q) {
     var b2 = height; // to top of the svg box; b2 = height stays the same
 
     // calculate a
-    a1 = (b1 + q) / p;
-    a2 = (b2 + q) / p;
+    a1 = (b1 - q) / p;
+    a2 = (b2 - q) / p;
     var line = [a1, b1, a2, b2];
 
     // dualLines.push(line);
