@@ -264,8 +264,8 @@ function convertToDualLine(slope, negY) {
     // a2 = (b2 - q) / p;
 
     // calculate b
-    b1 = a1 * p + q;
-    b2 = a2 * p + q;
+    b1 = a1 * slope + yIntercept;
+    b2 = a2 * slope + yIntercept;
 
     var line = [a1, b1, a2, b2];
 
