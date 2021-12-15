@@ -31,13 +31,15 @@ var svg = d3.select("body")
             .append("svg")
             .attr("width", width)
             .attr("height", height)
-            .attr("style", "border:1px solid #000000;");
+            .attr("style", "border:1px solid #000000;")
+            .attr("display", "block");
 
 var dualSvg = d3.select("body")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
-                .attr("style", "border:1px solid #000000;");
+                .attr("style", "border:1px solid #000000;")
+                .attr("display", "block");
 
 // var gsButton = d3.select("gsButton")
 //                 .on("onclick", function() {
