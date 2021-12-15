@@ -28,14 +28,16 @@ var height = 500;
 Skeleton for appending a circle to an svg element
 */
 //Create SVG element
-var svg = d3.select("body")
+// var svg = d3.select("body")
+var svg = d3.select("gs")
             .append("svg")
             .attr("width", width)
             .attr("height", height)
             .attr("style", "border:1px solid #000000;");
             // .attr("display", "inline-block");
 
-var dualSvg = d3.select("body")
+// var dualSvg = d3.select("body")
+var svg = d3.select("dp")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
