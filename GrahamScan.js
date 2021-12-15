@@ -13,6 +13,7 @@
 Took the skeleton of how to make a function in V3
 */
 
+var pointID = 0; // unique id for each point and its dual line
 var points = [];
 var hulls = {upperHull: [], lowerHull: []};
 var dualLines = []; // dual plane version of points
@@ -50,27 +51,33 @@ var dualSvg = d3.select("body")
                 // .attr("display", "inline-block");
 
 
-// var gsButton = d3.select("gsButton")
-//                 .on("onclick", function() {
-//                     console.log("button clicked");
-//                 });
-
 document.getElementById("gsButton").addEventListener("click", function() {
     console.log("gsButton clicked");
 
     const lowerH = lowerHull();
     console.log(lowerH);
     for(var i = 0; i < lowerH.length-1; i++) {
+        var point1 = lowerH[i];
+        var point2 = lowerH[i+1];
         // draw lines between lower hull points, left to right
-        drawLine(lowerH[i].x, lowerH[i].y, lowerH[i+1].x, lowerH[i+1].y, "red");
+        drawLine(point1.x, point1.y, point2.x, point2.y, "red");
 
+        // color dual line as red also
+        document.getElementById(point1.pointID).style("stroke", "red");
     }
+    
+
 
     const upperH = upperHull();
     console.log(upperH);
     for(var i = 0; i < upperH.length-1; i++) {
+        var point1 = upperH[i];
+        var point2 = upperH[i+1];
         // draw lines between lower hull points, left to right
-        drawLine(upperH[i].x, upperH[i].y, upperH[i+1].x, upperH[i+1].y, "blue");
+        drawLine(point1.x, point1.y, point2.x, point2.y, "blue");
+
+        // color dual line as bleu also
+        document.getElementById(point1.pointID).style("stroke", "blue");
     }
 
 });
@@ -100,7 +107,10 @@ d3.select("svg")
     x = xy[0];
     y = xy[1];
 
-    points.push({x: x, y: y});
+    var point = {x: x, y: y, pointID: pointID}
+
+    points.push(point);
+    ++pointID;
     
     // draw point
     svg.append("circle")
@@ -109,7 +119,7 @@ d3.select("svg")
     .attr("r", cr);
 
     // draw dual line
-    var line = convertToDualLine(x, y);
+    var line = convertToDualLine(point);
     drawDualLine(line);
 
 
@@ -139,14 +149,15 @@ d3.select("svg")
     // .attr("y2", y2);
 });
 
-function drawDualLine(coords) {
+function drawDualLine(point) {
     dualSvg.append("line")
         .style("stroke", "black")
         .style("stroke-width", 5)
-        .attr("x1", coords[0])
-        .attr("y1", coords[1])
-        .attr("x2", coords[2])
-        .attr("y2", coords[3]);
+        .attr("id", point.pointID)
+        .attr("x1", point.a1)
+        .attr("y1", point.b1)
+        .attr("x2", point.a2)
+        .attr("y2", point.b2);
 }
 
 function drawLine(x1, y1, x2, y2, color) {
@@ -277,7 +288,9 @@ function dualPlaneGetSVGCoords(m, n) {
 }
 
 
-function convertToDualLine(p, q) {
+function convertToDualLine(point) {
+    const p = point.x;
+    const q = point.y;
     var centeredCoords = primalPlaneGetCenteredCoords(p, q);
     var slope = 0;
     var yIntercept = 0;
@@ -302,8 +315,8 @@ function convertToDualLine(p, q) {
     console.log("(a2, b2): (" + a2 + ", " + b2 + ")");
 
     // convert to SVG coordinates for graphing
-    var line = [dualPlaneGetSVGCoords(a1, b1)[0], dualPlaneGetSVGCoords(a1, b1)[1],
-    dualPlaneGetSVGCoords(a2, b2)[0], dualPlaneGetSVGCoords(a2, b2)[1]];
+    var line = {a1: dualPlaneGetSVGCoords(a1, b1)[0], b1: dualPlaneGetSVGCoords(a1, b1)[1],
+    a2: dualPlaneGetSVGCoords(a2, b2)[0], b2: dualPlaneGetSVGCoords(a2, b2)[1], pointID: point.pointID};
     console.log("SVG line (a1, b1, a2, b2): " + line);
     // dualLines.push(line);
 
