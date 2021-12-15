@@ -251,17 +251,19 @@ function lowerHull() {
 // -----------------------------------Dual Plane----------------------------------------------
 
 /* To make the dual lines more spread out and easier to visualize, I chose to have (0, 0)
- on the center of the primal plane and the dual plane.
+ on the center of the primal plane and the dual plane.  Also, to have slopes be not too big,
+ I chose to have the axes be scaled, so that slope is better visualized on the dual plane.
  This is different from the coordinate system of SVG, which has (0, 0) on the upper left;
   so adjustments must be made, but duality relationships stay the same.
 */
+
 /*
 (p, q) is the SVG coordinates of a point on the primal plane
 returns: coordinates of the point in a center (0, 0) coordinate system
 ex. primalPlaneGetCenteredCoords(0, 0) returns [-250, 250]
 */
 function primalPlaneGetCenteredCoords(p, q) {
-    return [p-250, 250-q];
+    return [(p-250)/50, (250-q)/50];
 }
 
 /*
@@ -269,8 +271,8 @@ function primalPlaneGetCenteredCoords(p, q) {
 returns: coordinates of the point in a SVG coordinate system
 ex. dualPlaneGetSVGCoords(0, 0) returns [250, 250]
 */
-function dualPlaneGetSVGCoords(p, q) {
-    return [p+250, 250-q];
+function dualPlaneGetSVGCoords(m, n) {
+    return [(m*50+250), (250-n*50)];
 }
 
 
