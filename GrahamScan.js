@@ -37,7 +37,7 @@ var svg = d3.select("gs")
             // .attr("display", "inline-block");
 
 // var dualSvg = d3.select("body")
-var svg = d3.select("dp")
+var dualSvg = d3.select("dp")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
