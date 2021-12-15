@@ -13,10 +13,12 @@ Took the skeleton of how to make a function in V3
 */
 
 var points = [];
+var dualLines = []; // dual plane version of points
+
 // var stack = [];
 var x;
 var y;
-const cr = 5;
+const cr = 5; // point radius, in pixels
 
 var width = 500;
 var height = 500;
@@ -30,6 +32,12 @@ var svg = d3.select("body")
             .attr("width", width)
             .attr("height", height)
             .attr("style", "border:1px solid #000000;");
+
+var dualSvg = d3.select("body")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .attr("style", "border:1px solid #000000;");
 
 // var gsButton = d3.select("gsButton")
 //                 .on("onclick", function() {
@@ -60,6 +68,7 @@ document.getElementById("resetButton").addEventListener("click", function() {
 
     svg.selectAll("*").remove();
 
+    points = [];
 });
 
 
@@ -79,7 +88,9 @@ d3.select("svg")
     .attr("cy", y)
     .attr("r", cr);
 
-
+    // draw dual line
+    var line = convertToDualLine(x, y);
+    drawDualLine(line);
 
 
     const x1 = d3.mouse(this)[0];
@@ -108,6 +119,16 @@ d3.select("svg")
     // .attr("x2", x2)
     // .attr("y2", y2);
 });
+
+function drawDualLine(coords) {
+    dualSvg.append("line")
+        .style("stroke", "black")
+        .style("stroke-width", 5)
+        .attr("x1", coords[0])
+        .attr("y1", coords[1])
+        .attr("x2", coords[2])
+        .attr("y2", coords[3]);
+}
 
 function drawLine(x1, y1, x2, y2) {
     svg.append("line")
@@ -212,6 +233,29 @@ function lowerHull() {
     }
 
     return stack;
+}
+
+
+
+
+// -----------------------------------Dual Plane----------------------------------------------
+
+function convertToDualLine(p, q) {
+    // var slope = p;
+    // var yIntercept = -1 * q;
+    var a1 = 0;
+    var b1 = 0; // from bottom of the svg box; b1 = 0 stays the same
+    var a2 = 0;
+    var b2 = height; // to top of the svg box; b2 = height stays the same
+
+    // calculate a
+    a1 = (b1 + q) / p;
+    a2 = (b2 + q) / p;
+    var line = [a1, b1, a2, b2];
+
+    // dualLines.push(line);
+
+    return line;
 }
 
 
