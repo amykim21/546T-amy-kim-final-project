@@ -57,6 +57,9 @@ document.getElementById("gsButton").addEventListener("click", function() {
 
 document.getElementById("resetButton").addEventListener("click", function() {
     console.log("resetButton clicked");
+
+    svg.selectAll("*").remove();
+
 });
 
 
@@ -211,22 +214,4 @@ function lowerHull() {
     return stack;
 }
 
-// function grahamNext() {
-//     // make copy of points so that user can't change it anymore
-
-//     // make empty stack
-//     var stack = [];
-
-//     // find lowest y-coordinate and leftmost point, called p0
-//     // sort points by polar angle with p0
-
-//     // for point in points:
-//         // pop the last point from the stack if we turn clockwise to reach this point:
-//         // while count stack > 1 and ccw(next_to_top(stack), top(stack), point) <= 0:
-//             // pop stack
-//         // push point to stack
-
-//     // stack will contain convex hull
-
-// }
 
