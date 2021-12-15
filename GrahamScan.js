@@ -252,7 +252,6 @@ function lowerHull() {
 
 function convertToDualLine(slope, negY) {
     // ---note: SVG's grid has (0, 0) on the upper left; y axis flipped
-    // var slope = p;
     var yIntercept = -1 * (height - negY);
     var a1 = 0;
     var b1 = 0; // from bottom of the svg box; b1 = 0 stays the same
@@ -268,6 +267,11 @@ function convertToDualLine(slope, negY) {
     b2 = a2 * slope + yIntercept;
 
     var line = [a1, b1, a2, b2];
+
+    console.log("(slope, yIntercept): (" + slope + ", " + yIntercept + ")");
+    console.log("(a1, b1): (" + a1 + ", " + b1 + ")");
+    console.log("(a2, b2): (" + a2 + ", " + b2 + ")");
+    console.log("line: " + line);
 
     // dualLines.push(line);
 
