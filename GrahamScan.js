@@ -5,9 +5,9 @@
 // import { sort } from "d3";
 // import * as d3 from "https://d3js.org/d3.v4.min.js";
 
-d3.select('h3').style('color', 'blue');
-d3.select('h3').style('font-size', '24px');
-d3.select('div').style('display', 'inline-block');
+// d3.select('h3').style('color', 'blue');
+// d3.select('h3').style('font-size', '24px');
+// d3.select('div').style('display', 'inline-block');
 
 /* https://www.tutorialsteacher.com/d3js/function-of-data-in-d3js
 Took the skeleton of how to make a function in V3
