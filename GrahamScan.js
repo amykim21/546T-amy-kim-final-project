@@ -256,12 +256,17 @@ function convertToDualLine(p, q) {
     // var yIntercept = -1 * q;
     var a1 = 0;
     var b1 = 0; // from bottom of the svg box; b1 = 0 stays the same
-    var a2 = 0;
-    var b2 = height; // to top of the svg box; b2 = height stays the same
+    var a2 = width;
+    var b2 = 0;//height; // to top of the svg box; b2 = height stays the same
 
     // calculate a
-    a1 = (b1 - q) / p;
-    a2 = (b2 - q) / p;
+    // a1 = (b1 - q) / p;
+    // a2 = (b2 - q) / p;
+
+    // calculate b
+    b1 = a1 * p + q;
+    b2 = a2 * p + q;
+
     var line = [a1, b1, a2, b2];
 
     // dualLines.push(line);
