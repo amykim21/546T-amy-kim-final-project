@@ -51,8 +51,6 @@ var dualSvg = d3.select("body")
 
 
 document.getElementById("gsButton").addEventListener("click", function() {
-    console.log("gsButton clicked");
-
     const lowerH = lowerHull();
     console.log(lowerH);
     for(var i = 0; i < lowerH.length-1; i++) {
@@ -84,7 +82,7 @@ document.getElementById("gsButton").addEventListener("click", function() {
     }
 
     const lowerEnv = lowerEnvelope();
-    console.log("lowerE: " + lowerEnv);
+    console.log("lowerEnv: " + lowerEnv);
     for(var i = 0; i < lowerEnv.length-1; i++) {
         var point1 = lowerEnv[i];
         var point2 = lowerEnv[i+1];
@@ -97,32 +95,36 @@ document.getElementById("gsButton").addEventListener("click", function() {
         .attr("x2", point2[0])
         .attr("y2", point2[1]);
     }
+    const upperEnv = upperEnvelope();
+    console.log("upperEnvelope: " + upperEnv);
+    for(var i = 0; i < upperEnv.length-1; i++) {
+        var point1 = upperEnv[i];
+        var point2 = upperEnv[i+1];
+
+        dualSvg.append("line")
+        .style("stroke", "red")
+        .style("stroke-width", 5)
+        .attr("x1", point1[0])
+        .attr("y1", point1[1])
+        .attr("x2", point2[0])
+        .attr("y2", point2[1]);
+    }
+
 
 });
 
 document.getElementById("resetButton").addEventListener("click", function() {
-    console.log("resetButton clicked");
-
     svg.selectAll("*").remove();
     dualSvg.selectAll("*").remove();
 
     points = [];
 });
 
-// document.getElementById("resetButtonDualPlane").addEventListener("click", function() {
-//     console.log("resetButtonDualPlane clicked");
-
-//     dualSvg.selectAll("*").remove();
-
-//     // dualLines = [];
-// });
-
 
 
 d3.select("svg")
     .on("click", function() {
     var xy = d3.mouse(this);
-    // console.log(xy); // x and y coordinates; (0, 0) is top left
     x = xy[0];
     y = xy[1];
     var point = {x: x, y: y, pointID: "p"+pointID.toString(), dualLine: null};
@@ -239,7 +241,6 @@ function upperHull() {
 
     for(var i = 2; i < sorted.length; i++) {
         const point = sorted[i];
-        console.log(orient(stack[stack.length-2], stack[stack.length-1], point));
         while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
             stack.pop();
         }
@@ -268,7 +269,6 @@ function lowerHull() {
 
     for(var i = 2; i < sorted.length; i++) {
         const point = sorted[i];
-        console.log("lowerHull orient: " + orient(stack[stack.length-2], stack[stack.length-1], point));
         while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) > 0) {
             stack.pop();
         }
@@ -399,4 +399,34 @@ function lowerEnvelope() {
     return pointsToDraw;
 }
 
+function upperEnvelope() {
+    var sorted = Array.from(hulls.lowerHull); // make copy
+    var pointsToDraw = []; // will be points to draw, in SVG coordinates
+    // sort points by increasing slope (equivalent to increasing x-coordinate)
+    sorted.sort((a, b) => {
+        return (a.x-b.x);
+    });
 
+    // the leftmost point of dual line with lowest slope will be drawn
+    const dl = sorted[0].dualLine;
+    if(dl.a1 < dl.a2) {
+        pointsToDraw.push(dualPlaneGetSVGCoords(dl.a1, -dl.b1));
+    } else {
+        pointsToDraw.push(dualPlaneGetSVGCoords(dl.a2, -dl.b2));
+    }
+
+    // add intersections
+    for(var i = 0; i < sorted.length-1; i++) {
+        pointsToDraw.push(getIntersectionPoint(sorted[i], sorted[i+1]));
+    }
+
+    // the rightmost point of the dual line with highest slope will be drawn
+    const lm = sorted[sorted.length-1].dualLine;
+    if(lm.a1 > lm.a2) {
+        pointsToDraw.push(dualPlaneGetSVGCoords(lm.a1, -lm.b1));
+    } else {
+        pointsToDraw.push(dualPlaneGetSVGCoords(lm.a2, -lm.b2));
+    }
+
+    return pointsToDraw;
+}
