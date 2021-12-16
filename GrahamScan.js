@@ -14,7 +14,8 @@ Took the skeleton of how to make a function in V3
 */
 
 var pointID = 0; // unique id for each point and its dual line
-var points = [];
+var points = []; // each point has form {x: x, y: y, pointID: "p"+pointID.toString(), dualLine: line}
+                // each line has form {a1: a1, b1: b1, a2: a2, b2: b2, pointID: point.pointID};
 var hulls = {upperHull: [], lowerHull: []};
 var dualLines = []; // dual plane version of points
 
@@ -31,7 +32,6 @@ Skeleton for appending a circle to an svg element
 */
 //Create SVG element
 var svg = d3.select("body")
-// var svg = d3.select("gs")
             .append("svg")
             .attr("class", "gs")
             .attr("id", "gsSVG")
@@ -41,7 +41,6 @@ var svg = d3.select("body")
             // .attr("display", "inline-block");
 
 var dualSvg = d3.select("body")
-// var dualSvg = d3.select("dp")
                 .append("svg")
                 .attr("class", "dp")
                 .attr("id", "dpSVG")
@@ -66,6 +65,8 @@ document.getElementById("gsButton").addEventListener("click", function() {
         drawDualLine(convertToDualLine(point1), "red");
         // d3.select("#p"+point1.pointID).transition().style("stroke", "red");
     }
+
+
     
 
 
@@ -80,6 +81,21 @@ document.getElementById("gsButton").addEventListener("click", function() {
         // color dual line as blue also
         drawDualLine(convertToDualLine(point1), "blue");
         // d3.select("#p"+point1.pointID).transition().style("stroke", "blue");
+    }
+
+    const lowerEnv = lowerEnvelope();
+    console.log("lowerE: " + lowerEnv);
+    for(var i = 0; i < lowerEnv.length-1; i++) {
+        var point1 = lowerEnv[i];
+        var point2 = lowerEnv[i+1];
+
+        dualSvg.append("line")
+        .style("stroke", "blue")
+        .style("stroke-width", 5)
+        .attr("x1", point1[0])
+        .attr("y1", point1[1])
+        .attr("x2", point2[0])
+        .attr("y2", point2[1]);
     }
 
 });
@@ -110,7 +126,11 @@ d3.select("svg")
     x = xy[0];
     y = xy[1];
 
-    var point = {x: x, y: y, pointID: "p"+pointID.toString()}
+    // draw dual line
+    var line = convertToDualLine(point);
+    drawDualLine(line, "black");
+
+    var point = {x: x, y: y, pointID: "p"+pointID.toString(), dualLine: line};
 
     points.push(point);
     ++pointID;
@@ -121,9 +141,7 @@ d3.select("svg")
     .attr("cy", y)
     .attr("r", cr);
 
-    // draw dual line
-    var line = convertToDualLine(point);
-    drawDualLine(line, "black");
+
 
 
     const x1 = d3.mouse(this)[0];
@@ -324,6 +342,55 @@ function convertToDualLine(point) {
     // dualLines.push(line);
 
     return line;
+}
+
+// -----------------------------------Upper and Lower Envelops----------------------------------------------
+function getIntersectionPoint(p1, p2) {
+    var X = 0; // (X, Y) is the point of intersection in SVG coordinates
+    var Y = 0;
+    var cp1 = primalPlaneGetCenteredCoords(p1[0], p1[1]);
+    var cp2 = primalPlaneGetCenteredCoords(p2[0], p2[1]);
+    var slope1 = cp1[0];
+    var slope2 = cp2[0];
+    var yIntercept1 = -1 * cp1[1];
+    var yIntercept2 = -1 * cp2[1];
+
+    X = (yIntercept2 - yIntercept1) / (slope1 - slope2);
+    Y = slope1 * X + yIntercept1;
+
+    return dualPlaneGetSVGCoords(X, Y);
+}
+
+function lowerEnvelope() {
+    var sorted = Array.from(hulls.upperHull); // make copy
+    var pointsToDraw = []; // will be points to draw, in SVG coordinates
+    // sort points by increasing slope (equivalent to increasing x-coordinate)
+    sorted.sort((a, b) => {
+        return (a.x-b.x);
+    });
+
+    // the rightmost point of dual line with lowest slope will be drawn
+    const dl = sorted[0].dualLine;
+    if(dl.a1 > dl.a2) {
+        pointsToDraw.push(dualPlaneGetSVGCoords(dl.a1, dl.b1));
+    } else {
+        pointsToDraw.push(dualPlaneGetSVGCoords(dl.a2, dl.b2));
+    }
+
+    // add intersections
+    for(var i = 0; i < sorted.length-1; i++) {
+        pointsToDraw.push(getIntersectionPoint(sorted[i], sorted[i+1]));
+    }
+
+    // the leftmost point of the dual line with highest slope will be drawn
+    const lm = sorted[sorted.length-1].dualLine;
+    if(lm.a1 > lm.a2) {
+        pointsToDraw.push(dualPlaneGetSVGCoords(lm.a1, lm.b1));
+    } else {
+        pointsToDraw.push(dualPlaneGetSVGCoords(lm.a2, lm.b2));
+    }
+
+    return pointsToDraw;
 }
 
 
