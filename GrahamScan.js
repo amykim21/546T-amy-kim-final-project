@@ -382,10 +382,10 @@ function lowerEnvelope() {
         pointsToDraw.push(getIntersectionPoint(sorted[i], sorted[i+1]));
 
         dualSvg.append("circle")
-        .style("fill", "purple")
+        .style("fill", "blue")
         .attr("cx", getIntersectionPoint(sorted[i], sorted[i+1])[0])
         .attr("cy", getIntersectionPoint(sorted[i], sorted[i+1])[1])
-        .attr("r", 3*cr);
+        .attr("r", 2*cr);
     }
 
     // the leftmost point of the dual line with highest slope will be drawn
@@ -418,6 +418,12 @@ function upperEnvelope() {
     // add intersections
     for(var i = 0; i < sorted.length-1; i++) {
         pointsToDraw.push(getIntersectionPoint(sorted[i], sorted[i+1]));
+
+        dualSvg.append("circle")
+        .style("fill", "red")
+        .attr("cx", getIntersectionPoint(sorted[i], sorted[i+1])[0])
+        .attr("cy", getIntersectionPoint(sorted[i], sorted[i+1])[1])
+        .attr("r", 2*cr);
     }
 
     // the rightmost point of the dual line with highest slope will be drawn
