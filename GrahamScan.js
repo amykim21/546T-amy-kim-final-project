@@ -63,7 +63,7 @@ document.getElementById("gsButton").addEventListener("click", function() {
         drawLine(point1.x, point1.y, point2.x, point2.y, "red");
 
         // color dual line as red also
-        document.getElementById(point1.pointID).style("stroke", "red");
+        d3.select("#p"+point1.pointID).transition().style("stroke", "red");
     }
     
 
@@ -77,7 +77,7 @@ document.getElementById("gsButton").addEventListener("click", function() {
         drawLine(point1.x, point1.y, point2.x, point2.y, "blue");
 
         // color dual line as bleu also
-        document.getElementById(point1.pointID).style("stroke", "blue");
+        d3.select("#p"+point1.pointID).transition().style("stroke", "blue");
     }
 
 });
@@ -107,7 +107,7 @@ d3.select("svg")
     x = xy[0];
     y = xy[1];
 
-    var point = {x: x, y: y, pointID: pointID}
+    var point = {x: x, y: y, pointID: "p"+pointID.toString()}
 
     points.push(point);
     ++pointID;
