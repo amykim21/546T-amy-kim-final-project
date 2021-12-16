@@ -125,13 +125,13 @@ d3.select("svg")
     // console.log(xy); // x and y coordinates; (0, 0) is top left
     x = xy[0];
     y = xy[1];
-    var point = {x: x, y: y, pointID: "p"+pointID.toString(), dualLine: line};
+    var point = {x: x, y: y, pointID: "p"+pointID.toString(), dualLine: null};
 
     // draw dual line
     var line = convertToDualLine(point);
     drawDualLine(line, "black");
 
-    
+    point.dualLine = line;
     points.push(point);
     ++pointID;
     
