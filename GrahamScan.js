@@ -63,7 +63,7 @@ document.getElementById("gsButton").addEventListener("click", function() {
         drawLine(point1.x, point1.y, point2.x, point2.y, "red");
 
         // color dual line as red also
-        drawDualLine(point1, "red");
+        drawDualLine(convertToDualLine(point1), "red");
         // d3.select("#p"+point1.pointID).transition().style("stroke", "red");
     }
     
@@ -78,7 +78,7 @@ document.getElementById("gsButton").addEventListener("click", function() {
         drawLine(point1.x, point1.y, point2.x, point2.y, "blue");
 
         // color dual line as blue also
-        drawDualLine(point1, "blue");
+        drawDualLine(convertToDualLine(point1), "blue");
         // d3.select("#p"+point1.pointID).transition().style("stroke", "blue");
     }
 
@@ -88,17 +88,18 @@ document.getElementById("resetButton").addEventListener("click", function() {
     console.log("resetButton clicked");
 
     svg.selectAll("*").remove();
+    dualSvg.selectAll("*").remove();
 
     points = [];
 });
 
-document.getElementById("resetButtonDualPlane").addEventListener("click", function() {
-    console.log("resetButtonDualPlane clicked");
+// document.getElementById("resetButtonDualPlane").addEventListener("click", function() {
+//     console.log("resetButtonDualPlane clicked");
 
-    dualSvg.selectAll("*").remove();
+//     dualSvg.selectAll("*").remove();
 
-    // dualLines = [];
-});
+//     // dualLines = [];
+// });
 
 
 
