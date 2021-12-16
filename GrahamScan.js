@@ -38,7 +38,8 @@ var svg = d3.select("body")
             .attr("height", height)
             .attr("style", "border:1px solid #000000;")
             .attr("display", "flex")
-            .attr("flex-direction", "row");
+            .attr("flex", "auto")
+            .attr("flex-flow", "row nowrap");
 
 var dualSvg = d3.select("body")
                 .append("svg")
@@ -48,7 +49,8 @@ var dualSvg = d3.select("body")
                 .attr("height", height)
                 .attr("style", "border:1px solid #000000;")
                 .attr("display", "flex")
-                .attr("flex-direction", "row");
+                .attr("flex", "auto")
+                .attr("flex-flow", "row nowrap");
 
 
 document.getElementById("gsButton").addEventListener("click", function() {
