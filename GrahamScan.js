@@ -62,7 +62,7 @@ document.getElementById("gsButton").addEventListener("click", function() {
         drawLine(point1.x, point1.y, point2.x, point2.y, "red");
 
         // color dual line as red also
-        drawDualLine(convertToDualLine(point1), "red");
+        // drawDualLine(convertToDualLine(point1), "red");
         // d3.select("#p"+point1.pointID).transition().style("stroke", "red");
     }
 
@@ -79,7 +79,7 @@ document.getElementById("gsButton").addEventListener("click", function() {
         drawLine(point1.x, point1.y, point2.x, point2.y, "blue");
 
         // color dual line as blue also
-        drawDualLine(convertToDualLine(point1), "blue");
+        // drawDualLine(convertToDualLine(point1), "blue");
         // d3.select("#p"+point1.pointID).transition().style("stroke", "blue");
     }
 
@@ -348,8 +348,8 @@ function convertToDualLine(point) {
 function getIntersectionPoint(p1, p2) {
     var X = 0; // (X, Y) is the point of intersection in SVG coordinates
     var Y = 0;
-    var cp1 = primalPlaneGetCenteredCoords(p1[0], p1[1]);
-    var cp2 = primalPlaneGetCenteredCoords(p2[0], p2[1]);
+    var cp1 = primalPlaneGetCenteredCoords(p1.x, p1.y);
+    var cp2 = primalPlaneGetCenteredCoords(p2.x, p2.x);
     var slope1 = cp1[0];
     var slope2 = cp2[0];
     var yIntercept1 = -1 * cp1[1];
