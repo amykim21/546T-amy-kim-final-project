@@ -19,7 +19,6 @@ var points = []; // each point has form {x: x, y: y, pointID: "p"+pointID.toStri
 var hulls = {upperHull: [], lowerHull: []};
 var dualLines = []; // dual plane version of points
 
-// var stack = [];
 var x;
 var y;
 const cr = 5; // point radius, in pixels
@@ -37,8 +36,9 @@ var svg = d3.select("body")
             .attr("id", "gsSVG")
             .attr("width", width)
             .attr("height", height)
-            .attr("style", "border:1px solid #000000;");
-            // .attr("display", "inline-block");
+            .attr("style", "border:1px solid #000000;")
+            .attr("display", "flex")
+            .attr("flex-direction", "row");
 
 var dualSvg = d3.select("body")
                 .append("svg")
@@ -46,8 +46,9 @@ var dualSvg = d3.select("body")
                 .attr("id", "dpSVG")
                 .attr("width", width)
                 .attr("height", height)
-                .attr("style", "border:1px solid #000000;");
-                // .attr("display", "inline-block");
+                .attr("style", "border:1px solid #000000;")
+                .attr("display", "flex")
+                .attr("flex-direction", "row");
 
 
 document.getElementById("gsButton").addEventListener("click", function() {
