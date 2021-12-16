@@ -63,7 +63,8 @@ document.getElementById("gsButton").addEventListener("click", function() {
         drawLine(point1.x, point1.y, point2.x, point2.y, "red");
 
         // color dual line as red also
-        d3.select("#p"+point1.pointID).transition().style("stroke", "red");
+        drawDualLine(point1, "red");
+        // d3.select("#p"+point1.pointID).transition().style("stroke", "red");
     }
     
 
@@ -76,8 +77,9 @@ document.getElementById("gsButton").addEventListener("click", function() {
         // draw lines between lower hull points, left to right
         drawLine(point1.x, point1.y, point2.x, point2.y, "blue");
 
-        // color dual line as bleu also
-        d3.select("#p"+point1.pointID).transition().style("stroke", "blue");
+        // color dual line as blue also
+        drawDualLine(point1, "blue");
+        // d3.select("#p"+point1.pointID).transition().style("stroke", "blue");
     }
 
 });
@@ -120,7 +122,7 @@ d3.select("svg")
 
     // draw dual line
     var line = convertToDualLine(point);
-    drawDualLine(line);
+    drawDualLine(line, "black");
 
 
     const x1 = d3.mouse(this)[0];
@@ -149,15 +151,15 @@ d3.select("svg")
     // .attr("y2", y2);
 });
 
-function drawDualLine(point) {
+function drawDualLine(line, color) {
     dualSvg.append("line")
-        .style("stroke", "black")
+        .style("stroke", color)
         .style("stroke-width", 5)
-        .attr("id", point.pointID)
-        .attr("x1", point.a1)
-        .attr("y1", point.b1)
-        .attr("x2", point.a2)
-        .attr("y2", point.b2);
+        .attr("id", line.pointID)
+        .attr("x1", line.a1)
+        .attr("y1", line.b1)
+        .attr("x2", line.a2)
+        .attr("y2", line.b2);
 }
 
 function drawLine(x1, y1, x2, y2, color) {
