@@ -349,7 +349,7 @@ function getIntersectionPoint(p1, p2) {
     var X = 0; // (X, Y) is the point of intersection in SVG coordinates
     var Y = 0;
     var cp1 = primalPlaneGetCenteredCoords(p1.x, p1.y);
-    var cp2 = primalPlaneGetCenteredCoords(p2.x, p2.x);
+    var cp2 = primalPlaneGetCenteredCoords(p2.x, p2.y);
     var slope1 = cp1[0];
     var slope2 = cp2[0];
     var yIntercept1 = -1 * cp1[1];
@@ -372,22 +372,28 @@ function lowerEnvelope() {
     // the rightmost point of dual line with lowest slope will be drawn
     const dl = sorted[0].dualLine;
     if(dl.a1 > dl.a2) {
-        pointsToDraw.push(dualPlaneGetSVGCoords(dl.a1, dl.b1));
+        pointsToDraw.push(dualPlaneGetSVGCoords(dl.a1, -dl.b1));
     } else {
-        pointsToDraw.push(dualPlaneGetSVGCoords(dl.a2, dl.b2));
+        pointsToDraw.push(dualPlaneGetSVGCoords(dl.a2, -dl.b2));
     }
 
     // add intersections
     for(var i = 0; i < sorted.length-1; i++) {
         pointsToDraw.push(getIntersectionPoint(sorted[i], sorted[i+1]));
+
+        dualSvg.append("circle")
+        .style("fill", "purple")
+        .attr("cx", getIntersectionPoint(sorted[i], sorted[i+1])[0])
+        .attr("cy", getIntersectionPoint(sorted[i], sorted[i+1])[1])
+        .attr("r", 3*cr);
     }
 
     // the leftmost point of the dual line with highest slope will be drawn
     const lm = sorted[sorted.length-1].dualLine;
-    if(lm.a1 > lm.a2) {
-        pointsToDraw.push(dualPlaneGetSVGCoords(lm.a1, lm.b1));
+    if(lm.a1 < lm.a2) {
+        pointsToDraw.push(dualPlaneGetSVGCoords(lm.a1, -lm.b1));
     } else {
-        pointsToDraw.push(dualPlaneGetSVGCoords(lm.a2, lm.b2));
+        pointsToDraw.push(dualPlaneGetSVGCoords(lm.a2, -lm.b2));
     }
 
     return pointsToDraw;
