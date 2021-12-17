@@ -268,7 +268,6 @@ async function upperHullAnimation() {
         // highlightedTableRow = document.getElementById("push");
 
         document.getElementById("sort").style.backgroundColor = "white";
-        document.getElementById("push").style.backgroundColor = "tan";
           redraw(stack);
           await sleep(2000);
       } else {
@@ -279,7 +278,6 @@ async function upperHullAnimation() {
       for(var i = 2; i < sorted.length; i++) {
           const point = sorted[i];
 
-          document.getElementById("push").style.backgroundColor = "white";
           document.getElementById("for").style.backgroundColor = "tan";
           redraw(stack.concat(point));
           await sleep(2000);
