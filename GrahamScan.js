@@ -203,6 +203,8 @@ document.getElementById("gsButton").addEventListener("click", function() {
         .attr("y2", point2[1]);
     }
 
+    // test: try coloring a line purple
+    svg.select("#p"+points[0].pointID).transition().style("stroke", "purple");
 
 });
 
