@@ -249,9 +249,10 @@ async function upperHullAnimation() {
     // style.backgroundColor = "tan" // how to make it highlighted
       var stack = []; // will contain convex hull
       var sorted = Array.from(points); // make copy
-      
-    highlightedTableRow.style.backgroundColor = "tan";
 
+    // highlightedTableRow.style.backgroundColor = "tan";
+    document.getElementById("return").style.backgroundColor = "white";
+    document.getElementById("sort").style.backgroundColor = "tan";
     redraw(stack); // redraw to show empty stack
     console.log("calling sleep");
     await sleep(2000);
@@ -262,9 +263,12 @@ async function upperHullAnimation() {
       });
   
       if(sorted.length > 1) {
-          stack.push(sorted[0]);
-          stack.push(sorted[1]);
-  
+        stack.push(sorted[0]);
+        stack.push(sorted[1]);
+        // highlightedTableRow = document.getElementById("push");
+
+        document.getElementById("sort").style.backgroundColor = "white";
+        document.getElementById("push").style.backgroundColor = "tan";
           redraw(stack);
           console.log("calling sleep");
           await sleep(2000);
@@ -275,22 +279,31 @@ async function upperHullAnimation() {
   
       for(var i = 2; i < sorted.length; i++) {
           const point = sorted[i];
-          // redraw? with tentative point
+
+          document.getElementById("push").style.backgroundColor = "white";
+          document.getElementById("for").style.backgroundColor = "tan";
           redraw(stack.concat(point));
-          console.log("calling sleep on concatenated stack");
           await sleep(2000);
+
           while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
               stack.pop();
+
+              document.getElementById("for").style.backgroundColor = "white";
+              document.getElementById("while").style.backgroundColor = "tan";
+              document.getElementById("stackpop").style.backgroundColor = "tan";
               redraw(stack);
-              console.log("calling sleep");
               await sleep(2000);
           }
           stack.push(point);
+
+          document.getElementById("while").style.backgroundColor = "white";
+          document.getElementById("stackpop").style.backgroundColor = "white";
+          document.getElementById("push").style.backgroundColor = "tan";
           redraw(stack);
-          console.log("calling sleep");
           await sleep(2000);
       }
       hulls.upperHull = stack;
+      document.getElementById("return").style.backgroundColor = "tan";
       return stack; // array of points
   }
 
