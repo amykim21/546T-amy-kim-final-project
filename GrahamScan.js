@@ -99,7 +99,7 @@ document.getElementById("stepUHButton").addEventListener("click", function() {
     } else {
         // inner loop is finished, so execute outer loop
         stackUH.push(sortedUH[upperHullCounter.outerCtr]);
-        sortedUH[upperHullCounter.outerCtr] = sortedUH[upperHullCounter.outerCtr] + 1;
+        // sortedUH[upperHullCounter.outerCtr] = sortedUH[upperHullCounter.outerCtr] + 1;
 
         // run next inner loop
         upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
@@ -113,6 +113,8 @@ function innerLoopUH(i, stack) {
     // draw next tentative line, give id of upperHullCounter.lineID; increment lineID
     var point = sortedUH[i]; // tentative point
     var prevPoint = stack[stack.length-1];
+
+    upperHullCounter.lineID = upperHullCounter.lineID + 1;
     svg.append("line")
     .style("stroke", "black")
     .style("stroke-width", 5)
@@ -121,14 +123,14 @@ function innerLoopUH(i, stack) {
     .attr("y1", point.y)
     .attr("x2", prevPoint.x)
     .attr("y2", prevPoint.y);
-    upperHullCounter.lineID = upperHullCounter.lineID + 1;
 
     if(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
         stack.pop();        
         // if lineID > 0, delete last tentative line
         if(upperHullCounter.lineID > 0) {
-            d3.selectAll("#UH" + upperHullCounter.lineID).remove();
-            upperHullCounter.lineID = upperHullCounter.lineID - 1;
+            svg.selectAll("#UH" + upperHullCounter.lineID).remove();
+            svg.selectAll("#UH" + (upperHullCounter.lineID-1)).remove();
+            upperHullCounter.lineID = upperHullCounter.lineID - 2;
         }
 
         return true;
@@ -209,6 +211,8 @@ document.getElementById("resetButton").addEventListener("click", function() {
     dualSvg.selectAll("*").remove();
 
     points = [];
+    stackUH = [];
+    sortedUH = [];
     hulls = {upperHull: [], lowerHull: []};
 });
 
