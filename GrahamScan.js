@@ -53,6 +53,13 @@ var dualSvg = d3.select("body")
                 .attr("flex", "auto")
                 .attr("flex-flow", "row nowrap");
 
+var circles = svg.selectAll("circle");
+circles.on("mouseover", function(d) {
+    d3.select(this).style('fill', "purple");
+}).on("mouseout", function(d) {
+    d3.select(this).style('fill', 'red');
+});
+
 // global variables for UH
 function sortByX(arr) {
     arr.sort((a, b) => {
