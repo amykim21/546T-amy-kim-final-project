@@ -253,8 +253,8 @@ async function upperHullAnimation() {
     // highlightedTableRow.style.backgroundColor = "tan";
     document.getElementById("return").style.backgroundColor = "white";
     document.getElementById("sort").style.backgroundColor = "tan";
+    
     redraw(stack); // redraw to show empty stack
-    console.log("calling sleep");
     await sleep(2000);
   
       // sort points by x-coordinate
@@ -270,7 +270,6 @@ async function upperHullAnimation() {
         document.getElementById("sort").style.backgroundColor = "white";
         document.getElementById("push").style.backgroundColor = "tan";
           redraw(stack);
-          console.log("calling sleep");
           await sleep(2000);
       } else {
           console.log("need more points for convex hull");
