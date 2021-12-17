@@ -53,8 +53,6 @@ var dualSvg = d3.select("body")
                 .attr("flex", "auto")
                 .attr("flex-flow", "row nowrap");
 
-// var table = document.getElementsByTagName("table");
-var highlightedTableRow = document.getElementById("sort");
 
 
 document.getElementById("stepUHButton").addEventListener("click", function() {
@@ -68,7 +66,6 @@ document.getElementById("stepLHButton").addEventListener("click", function() {
 
 document.getElementById("gsButton").addEventListener("click", function() {
     const lowerH = lowerHull();
-    console.log(lowerH);
     for(var i = 0; i < lowerH.length-1; i++) {
         var point1 = lowerH[i];
         var point2 = lowerH[i+1];
@@ -77,7 +74,6 @@ document.getElementById("gsButton").addEventListener("click", function() {
     }
 
     const upperH = upperHull();
-    console.log(upperH);
     for(var i = 0; i < upperH.length-1; i++) {
         var point1 = upperH[i];
         var point2 = upperH[i+1];
@@ -86,7 +82,6 @@ document.getElementById("gsButton").addEventListener("click", function() {
     }
 
     const lowerEnv = lowerEnvelope();
-    console.log("lowerEnv: " + lowerEnv);
     for(var i = 0; i < lowerEnv.length-1; i++) {
         var point1 = lowerEnv[i];
         var point2 = lowerEnv[i+1];
@@ -100,7 +95,6 @@ document.getElementById("gsButton").addEventListener("click", function() {
         .attr("y2", point2[1]);
     }
     const upperEnv = upperEnvelope();
-    console.log("upperEnvelope: " + upperEnv);
     for(var i = 0; i < upperEnv.length-1; i++) {
         var point1 = upperEnv[i];
         var point2 = upperEnv[i+1];
@@ -241,16 +235,9 @@ function sleep(ms) {
 }
 
 async function upperHullAnimation() {
-    // var text = row.insertCell();
-	// 		text.style.padding = 0;
-	// 		text.style.margin = 0;
-	// 		tableLines.push(text);
-	// 		text.appendChild(document.createTextNode(line));
-    // style.backgroundColor = "tan" // how to make it highlighted
       var stack = []; // will contain convex hull
       var sorted = Array.from(points); // make copy
 
-    // highlightedTableRow.style.backgroundColor = "tan";
     document.getElementById("return").style.backgroundColor = "white";
     document.getElementById("sort").style.backgroundColor = "tan";
     
@@ -265,7 +252,6 @@ async function upperHullAnimation() {
       if(sorted.length > 1) {
         stack.push(sorted[0]);
         stack.push(sorted[1]);
-        // highlightedTableRow = document.getElementById("push");
 
         document.getElementById("sort").style.backgroundColor = "white";
           redraw(stack);
@@ -295,11 +281,13 @@ async function upperHullAnimation() {
 
           document.getElementById("while").style.backgroundColor = "white";
           document.getElementById("stackpop").style.backgroundColor = "white";
-          document.getElementById("push").style.backgroundColor = "tan";
+          document.getElementById("stackpush").style.backgroundColor = "tan";
           redraw(stack);
           await sleep(2000);
       }
       hulls.upperHull = stack;
+      document.getElementById("for").style.backgroundColor = "white";
+      document.getElementById("while").style.backgroundColor = "white";
       document.getElementById("return").style.backgroundColor = "tan";
       return stack; // array of points
   }
@@ -340,7 +328,6 @@ async function lowerHullAnimation() {
     var sorted = Array.from(points); // make copy
 
     redraw(stack); // redraw to show empty stack
-    console.log("calling sleep");
     await sleep(2000);
 
     // sort points by x-coordinate
@@ -352,7 +339,6 @@ async function lowerHullAnimation() {
         stack.push(sorted[0]);
         stack.push(sorted[1]);
         redraw(stack);
-        console.log("calling sleep");
         await sleep(2000);
     } else {
         console.log("need more points for convex hull");
@@ -362,17 +348,14 @@ async function lowerHullAnimation() {
     for(var i = 2; i < sorted.length; i++) {
         const point = sorted[i];
         redraw(stack.concat(point));
-        console.log("calling sleep on concatenated stack");
         await sleep(2000);
         while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) > 0) {
             stack.pop();
             redraw(stack);
-            console.log("calling sleep");
             await sleep(2000);
         }
         stack.push(point);
         redraw(stack);
-        console.log("calling sleep");
         await sleep(2000);
     }
     hulls.lowerHull = stack;
@@ -461,15 +444,10 @@ function convertToDualLine(point) {
     b1 = a1 * slope + yIntercept;
     b2 = a2 * slope + yIntercept;
 
-    console.log("centeredCoords: " + centeredCoords);
-    console.log("(slope, yIntercept): (" + slope + ", " + yIntercept + ")");
-    console.log("(a1, b1): (" + a1 + ", " + b1 + ")");
-    console.log("(a2, b2): (" + a2 + ", " + b2 + ")");
 
     // convert to SVG coordinates for graphing
     var line = {a1: dualPlaneGetSVGCoords(a1, b1)[0], b1: dualPlaneGetSVGCoords(a1, b1)[1],
     a2: dualPlaneGetSVGCoords(a2, b2)[0], b2: dualPlaneGetSVGCoords(a2, b2)[1], pointID: point.pointID};
-    console.log("SVG line (a1, b1, a2, b2): " + line);
 
     return line;
 }
