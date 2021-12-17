@@ -18,7 +18,6 @@ var pointID = 0; // unique id for each point and its dual line
 var points = []; // each point has form {x: x, y: y, pointID: "p"+pointID.toString(), dualLine: line}
                 // each line has form {a1: a1, b1: b1, a2: a2, b2: b2, pointID: point.pointID};
 var hulls = {upperHull: [], lowerHull: []};
-var processPoints = []; // contains points that are in process; used for step-through
 var dualLines = []; // dual plane version of points
 
 var x;
@@ -54,118 +53,15 @@ var dualSvg = d3.select("body")
                 .attr("flex", "auto")
                 .attr("flex-flow", "row nowrap");
 
-// var circles = svg.selectAll("circle");
-// circles.on("mouseover", function(d) {
-//     d3.select(this).style('fill', "purple");
-// }).on("mouseout", function(d) {
-//     d3.select(this).style('fill', 'red');
-// });
-
-// d3.selectAll("circle")
-// .on("mouseover", function(){
-//     d3.select(this)
-//       .style("fill", "orange");
-
-//     // Get current event info
-//     console.log(d3.event);
-    
-//     // Get x & y co-ordinates
-//     console.log(d3.mouse(this));
-// })
-// .on("mouseout", function(){
-//     d3.select(this)
-//       .style("fill", "orange");
-// });
-
-// global variables for UH
-function sortByX(arr) {
-    arr.sort((a, b) => {
-        return (a.x-b.x);
-    });
-}
-var stackUH = [];
-var sortedUH = [];
-var upperHullCounter = {innerNotFinished: true, outerCtr: 2};
 
 document.getElementById("stepUHButton").addEventListener("click", function() {
-    upperHull();
-    // svg.selectAll("*").remove();
-
-    // // draw points
-    // var fresh = Array.from(points);
-    // for(var i = 0; i < fresh.length; i++) {
-    //     // draw point
-    //     svg.append("circle")
-    //     .attr("cx", fresh[i].x)
-    //     .attr("cy", fresh[i].y)
-    //     .attr("r", cr);
-    // }
-
-    // // update processPoints
-    // sortedUH = Array.from(points);
-    // sortByX(sortedUH);
-    // console.log(sortedUH);
-    // // initialization
-    // if(sortedUH.length > 1 && stackUH.length == 0) {
-    //     console.log("inside");
-    //     stackUH.push(sortedUH[0]);
-    //     processPoints.push(sortedUH[0]);
-
-    //     stackUH.push(sortedUH[1]);
-    //     processPoints.push(sortedUH[1]);
-    //     console.log(stackUH);
-
-    //     // draw processPoints
-    //     for(var i = 0; i < stackUH.length-1; i++) {
-    //         var point1 = stackUH[i];
-    //         var point2 = stackUH[i+1];
-    //         drawLine(point1.x, point1.y, point2.x, point2.y, "black");
-    //     }
-    //     return;
-    // } else {
-    //     console.log("need more points for convex hull or stack has already been initialized");
-    // }
-    // if(upperHullCounter.innerNotFinished) {
-    //     upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
-    //     console.log(upperHullCounter.innerNotFinished);
-    // } else {
-    //     // inner loop is finished, so execute outer loop
-    //     var tentativePoint = sortedUH[upperHullCounter.outerCtr];
-    //     stackUH.push(tentativePoint);
-    //     processPoints.push(tentativePoint);
-    //     upperHullCounter.innerNotFinished = true; // reset inner loop not finished
-    //     // run next inner loop
-    //     // upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
-    // }
-
-    // console.log(stackUH);
-
-    // // draw processPoints
-    // for(var i = 0; i < stackUH.length-1; i++) {
-    //     var point1 = stackUH[i];
-    //     var point2 = stackUH[i+1];
-    //     drawLine(point1.x, point1.y, point2.x, point2.y, "black");
-    // } 
-    // for(var i = 0; i < processPoints.length-1; i++) {
-    //     var point1 = processPoints[i];
-    //     var point2 = processPoints[i+1];
-    //     drawLine(point1.x, point1.y, point2.x, point2.y, "black");
-    // } 
-
+    upperHullAnimation();
 });
 
+document.getElementById("stepLHButton").addEventListener("click", function() {
+    lowerHullAnimation();
+});
 
-function innerLoopUH(i, stack) {
-    var point = sortedUH[i]; // tentative point
-    processPoints.push(point); // FIX HERE
-    if(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
-        stack.pop();
-        processPoints.pop();
-        return true;
-    } else {
-        return false;
-    }
-}
 
 document.getElementById("gsButton").addEventListener("click", function() {
     const lowerH = lowerHull();
@@ -256,12 +152,8 @@ d3.select("svg")
     .attr("cy", y)
     .attr("r", cr);
 
-
-
-
     const x1 = d3.mouse(this)[0];
     const y1 = d3.mouse(this)[1];
-
 
     var x2 = x1;
     var y2 = y1;
@@ -345,7 +237,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function upperHull() {
+async function upperHullAnimation() {
       var stack = []; // will contain convex hull
       var sorted = Array.from(points); // make copy
   
@@ -383,33 +275,72 @@ async function upperHull() {
       return stack; // array of points
   }
 
-// function upperHull() {
-//     var stack = []; // will contain convex hull
-//     var sorted = Array.from(points); // make copy
+function upperHull() {
+    var stack = []; // will contain convex hull
+    var sorted = Array.from(points); // make copy
 
-//     // sort points by x-coordinate
-//     sorted.sort((a, b) => {
-//         return (a.x-b.x);
-//     });
+    // sort points by x-coordinate
+    sorted.sort((a, b) => {
+        return (a.x-b.x);
+    });
 
-//     if(sorted.length > 1) {
-//         stack.push(sorted[0]);
-//         stack.push(sorted[1]);
-//     } else {
-//         console.log("need more points for convex hull");
-//         return stack;
-//     }
+    if(sorted.length > 1) {
+        stack.push(sorted[0]);
+        stack.push(sorted[1]);
+        redraw(stack);
+          console.log("calling sleep");
+          await sleep(2000);
+    } else {
+        console.log("need more points for convex hull");
+        return stack;
+    }
 
-//     for(var i = 2; i < sorted.length; i++) {
-//         const point = sorted[i];
-//         while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
-//             stack.pop();
-//         }
-//         stack.push(point);
-//     }
-//     hulls.upperHull = stack;
-//     return stack; // array of points
-// }
+    for(var i = 2; i < sorted.length; i++) {
+        const point = sorted[i];
+        while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
+            stack.pop();
+            redraw(stack);
+          console.log("calling sleep");
+          await sleep(2000);
+        }
+        stack.push(point);
+        redraw(stack);
+          console.log("calling sleep");
+          await sleep(2000);
+    }
+    hulls.upperHull = stack;
+    return stack; // array of points
+}
+
+function lowerHullAnimation() {
+    var stack = []; // will contain convex hull
+    var sorted = Array.from(points); // make copy
+
+    // sort points by x-coordinate
+    sorted.sort((a, b) => {
+        return (a.x-b.x);
+    });
+
+    if(sorted.length > 1) {
+        stack.push(sorted[0]);
+        stack.push(sorted[1]);
+    } else {
+        console.log("need more points for convex hull");
+        return stack;
+    }
+
+    for(var i = 2; i < sorted.length; i++) {
+        const point = sorted[i];
+        while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) > 0) {
+            stack.pop();
+        }
+        stack.push(point);
+    }
+    hulls.lowerHull = stack;
+    return stack;
+}
+
+
 
 function lowerHull() {
     var stack = []; // will contain convex hull
