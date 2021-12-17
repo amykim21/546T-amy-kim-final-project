@@ -275,7 +275,7 @@ async function upperHullAnimation() {
       return stack; // array of points
   }
 
-function upperHull() {
+async function upperHull() {
     var stack = []; // will contain convex hull
     var sorted = Array.from(points); // make copy
 
