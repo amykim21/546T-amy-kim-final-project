@@ -60,23 +60,37 @@ var dualSvg = d3.select("body")
 //     d3.select(this).style('fill', 'red');
 // });
 
-d3.selectAll("circle")
-.on("mouseover", function(){
-    d3.select(this)
-      .style("fill", "orange");
+// d3.selectAll("circle")
+// .on("mouseover", function(){
+//     d3.select(this)
+//       .style("fill", "orange");
 
-    // Get current event info
-    console.log(d3.event);
+//     // Get current event info
+//     console.log(d3.event);
     
-    // Get x & y co-ordinates
-    console.log(d3.mouse(this));
-})
-.on("mouseout", function(){
-    d3.select(this)
-      .style("fill", "orange");
+//     // Get x & y co-ordinates
+//     console.log(d3.mouse(this));
+// })
+// .on("mouseout", function(){
+//     d3.select(this)
+//       .style("fill", "orange");
+// });
+
+document.getElementById("stepUHButton").addEventListener("click", function() {
+    svg.selectAll("*").remove();
+
+    // draw points
+    var fresh = Array.copy(point);
+    for(var i = 0; i < fresh.length; i++) {
+        // draw point
+        svg.append("circle")
+        .attr("cx", fresh[i].x)
+        .attr("cy", fresh[i].y)
+        .attr("r", cr);
+    }
+
+    // draw lines
 });
-
-
 
 document.getElementById("gsButton").addEventListener("click", function() {
     const lowerH = lowerHull();
