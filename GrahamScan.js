@@ -88,7 +88,7 @@ var sortedUH = [];
 var upperHullCounter = {innerNotFinished: true, outerCtr: 2};
 
 document.getElementById("stepUHButton").addEventListener("click", function() {
-    upperEnvelope();
+    upperHull();
     // svg.selectAll("*").remove();
 
     // // draw points
@@ -341,14 +341,11 @@ function redraw(freshStack) {
     } 
 }
 
-function sleeper() {
-    console.log("sleeper");
-    return function() {
-      return new Promise(resolve => setTimeout(resolve, 1000))
-    };
-  }
-  
-  function upperHull() {
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function upperHull() {
       var stack = []; // will contain convex hull
       var sorted = Array.from(points); // make copy
   
@@ -362,8 +359,8 @@ function sleeper() {
           stack.push(sorted[1]);
   
           redraw(stack);
-          console.log("calling sleeper");
-          sleeper().then();
+          console.log("calling sleep");
+          await sleep(2000);
       } else {
           console.log("need more points for convex hull");
           return stack;
@@ -374,13 +371,13 @@ function sleeper() {
           while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
               stack.pop();
               redraw(stack);
-              console.log("calling sleeper");
-              sleeper().then();
+              console.log("calling sleep");
+              await sleep(2000);
           }
           stack.push(point);
           redraw(stack);
-          console.log("calling sleeper");
-          sleeper().then();
+          console.log("calling sleep");
+          await sleep(2000);
       }
       hulls.upperHull = stack;
       return stack; // array of points
