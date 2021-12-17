@@ -275,7 +275,7 @@ async function upperHullAnimation() {
       return stack; // array of points
   }
 
-async function upperHull() {
+function upperHull() {
     var stack = []; // will contain convex hull
     var sorted = Array.from(points); // make copy
 
@@ -287,9 +287,7 @@ async function upperHull() {
     if(sorted.length > 1) {
         stack.push(sorted[0]);
         stack.push(sorted[1]);
-        redraw(stack);
-          console.log("calling sleep");
-          await sleep(2000);
+
     } else {
         console.log("need more points for convex hull");
         return stack;
@@ -299,20 +297,16 @@ async function upperHull() {
         const point = sorted[i];
         while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
             stack.pop();
-            redraw(stack);
-          console.log("calling sleep");
-          await sleep(2000);
+
         }
         stack.push(point);
-        redraw(stack);
-          console.log("calling sleep");
-          await sleep(2000);
+
     }
     hulls.upperHull = stack;
     return stack; // array of points
 }
 
-function lowerHullAnimation() {
+async function lowerHullAnimation() {
     var stack = []; // will contain convex hull
     var sorted = Array.from(points); // make copy
 
@@ -324,6 +318,9 @@ function lowerHullAnimation() {
     if(sorted.length > 1) {
         stack.push(sorted[0]);
         stack.push(sorted[1]);
+        redraw(stack);
+        console.log("calling sleep");
+        await sleep(2000);
     } else {
         console.log("need more points for convex hull");
         return stack;
@@ -333,8 +330,14 @@ function lowerHullAnimation() {
         const point = sorted[i];
         while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) > 0) {
             stack.pop();
+            redraw(stack);
+            console.log("calling sleep");
+            await sleep(2000);
         }
         stack.push(point);
+        redraw(stack);
+        console.log("calling sleep");
+        await sleep(2000);
     }
     hulls.lowerHull = stack;
     return stack;
