@@ -60,95 +60,7 @@ circles.on("mouseover", function(d) {
     d3.select(this).style('fill', 'red');
 });
 
-// global variables for UH
-function sortByX(arr) {
-    arr.sort((a, b) => {
-        return (a.x-b.x);
-    });
-}
 
-var stackUH = [];
-var sortedUH = [];
-// sortByX(sortedUH);
-
-// if(sortedUH.length > 1 && stackUH.length == 0) {
-//     stackUH.push(sortedUH[0]);
-//     stackUH.push(sortedUH[1]);
-// } else {
-//     console.log("need more points for convex hull");
-// }
-var upperHullCounter = {innerNotFinished: true, outerCtr: 2, lineID: 0};
-
-document.getElementById("stepUHButton").addEventListener("click", function() {
-    // var point = sortedUH[upperHullCounter.outerCtr];
-    sortedUH = Array.from(points);
-    sortByX(sortedUH);
-    console.log(sortedUH);
-
-    if(sortedUH.length > 1 && stackUH.length == 0) {
-        stackUH.push(sortedUH[0]);
-        stackUH.push(sortedUH[1]);
-        svg.append("line")
-        .style("stroke", "black")
-        .style("stroke-width", 5)
-        .attr("id", "#UH" + upperHullCounter.lineID)
-        .attr("x1", stackUH[0].x)
-        .attr("y1", stackUH[0].y)
-        .attr("x2", stackUH[1].x)
-        .attr("y2", stackUH[1].y);
-        upperHullCounter.lineID = upperHullCounter.lineID + 1;
-    } else {
-        console.log("need more points for convex hull or stack has already been initialized");
-    }
-
-    if(upperHullCounter.innerNotFinished) {
-        upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
-    } else {
-        // inner loop is finished, so execute outer loop
-        stackUH.push(sortedUH[upperHullCounter.outerCtr]);
-        // sortedUH[upperHullCounter.outerCtr] = sortedUH[upperHullCounter.outerCtr] + 1;
-
-        // run next inner loop
-        upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
-
-        // outerLoopUH(point, stackUH);
-
-    }
-});
-
-function innerLoopUH(i, stack) {
-    // draw next tentative line, give id of upperHullCounter.lineID; increment lineID
-    var point = sortedUH[i]; // tentative point
-    var prevPoint = stack[stack.length-1];
-
-    upperHullCounter.lineID = upperHullCounter.lineID + 1;
-    svg.append("line")
-    .style("stroke", "black")
-    .style("stroke-width", 5)
-    .attr("id", "#UH" + upperHullCounter.lineID)
-    .attr("x1", point.x)
-    .attr("y1", point.y)
-    .attr("x2", prevPoint.x)
-    .attr("y2", prevPoint.y);
-
-    if(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
-        stack.pop();        
-        // if lineID > 0, delete last tentative line
-        if(upperHullCounter.lineID > 0) {
-            svg.selectAll("#UH" + upperHullCounter.lineID).remove();
-            svg.selectAll("#UH" + (upperHullCounter.lineID-1)).remove();
-            upperHullCounter.lineID = upperHullCounter.lineID - 2;
-        }
-
-        return true;
-    } else {
-        return false;
-    }
-}
-
-// function outerLoopUH(point, stack) {
-//     stack.push(point);
-// }
 
 document.getElementById("gsButton").addEventListener("click", function() {
     const lowerH = lowerHull();
@@ -158,15 +70,7 @@ document.getElementById("gsButton").addEventListener("click", function() {
         var point2 = lowerH[i+1];
         // draw lines between lower hull points, left to right
         drawLine(point1.x, point1.y, point2.x, point2.y, "red");
-
-        // color dual line as red also
-        // drawDualLine(convertToDualLine(point1), "red");
-        // d3.select("#p"+point1.pointID).transition().style("stroke", "red");
     }
-
-
-    
-
 
     const upperH = upperHull();
     console.log(upperH);
@@ -175,10 +79,6 @@ document.getElementById("gsButton").addEventListener("click", function() {
         var point2 = upperH[i+1];
         // draw lines between lower hull points, left to right
         drawLine(point1.x, point1.y, point2.x, point2.y, "blue");
-
-        // color dual line as blue also
-        // drawDualLine(convertToDualLine(point1), "blue");
-        // d3.select("#p"+point1.pointID).transition().style("stroke", "blue");
     }
 
     const lowerEnv = lowerEnvelope();
@@ -263,18 +163,6 @@ d3.select("svg")
         y2 = points[points.length-2].y;
     }
     console.log(points);
-
-
-    // svg.append("line")
-    // .attr("class", "dashed")
-    // .style("stroke-dasharray", ("10, 10")) // adding this line makes it dashed
-    // // means 5 pixels draw, 5 pixels off
-    // .style("stroke", "black")
-    // .style("stroke-width", 5)
-    // .attr("x1", x1)
-    // .attr("y1", y1)
-    // .attr("x2", x2)
-    // .attr("y2", y2);
 });
 
 function drawDualLine(line, color) {
@@ -444,7 +332,6 @@ function convertToDualLine(point) {
     var line = {a1: dualPlaneGetSVGCoords(a1, b1)[0], b1: dualPlaneGetSVGCoords(a1, b1)[1],
     a2: dualPlaneGetSVGCoords(a2, b2)[0], b2: dualPlaneGetSVGCoords(a2, b2)[1], pointID: point.pointID};
     console.log("SVG line (a1, b1, a2, b2): " + line);
-    // dualLines.push(line);
 
     return line;
 }
