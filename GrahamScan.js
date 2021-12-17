@@ -88,63 +88,64 @@ var sortedUH = [];
 var upperHullCounter = {innerNotFinished: true, outerCtr: 2};
 
 document.getElementById("stepUHButton").addEventListener("click", function() {
-    svg.selectAll("*").remove();
+    upperEnvelope();
+    // svg.selectAll("*").remove();
 
-    // draw points
-    var fresh = Array.from(points);
-    for(var i = 0; i < fresh.length; i++) {
-        // draw point
-        svg.append("circle")
-        .attr("cx", fresh[i].x)
-        .attr("cy", fresh[i].y)
-        .attr("r", cr);
-    }
+    // // draw points
+    // var fresh = Array.from(points);
+    // for(var i = 0; i < fresh.length; i++) {
+    //     // draw point
+    //     svg.append("circle")
+    //     .attr("cx", fresh[i].x)
+    //     .attr("cy", fresh[i].y)
+    //     .attr("r", cr);
+    // }
 
-    // update processPoints
-    sortedUH = Array.from(points);
-    sortByX(sortedUH);
-    console.log(sortedUH);
-    // initialization
-    if(sortedUH.length > 1 && stackUH.length == 0) {
-        console.log("inside");
-        stackUH.push(sortedUH[0]);
-        processPoints.push(sortedUH[0]);
+    // // update processPoints
+    // sortedUH = Array.from(points);
+    // sortByX(sortedUH);
+    // console.log(sortedUH);
+    // // initialization
+    // if(sortedUH.length > 1 && stackUH.length == 0) {
+    //     console.log("inside");
+    //     stackUH.push(sortedUH[0]);
+    //     processPoints.push(sortedUH[0]);
 
-        stackUH.push(sortedUH[1]);
-        processPoints.push(sortedUH[1]);
-        console.log(stackUH);
+    //     stackUH.push(sortedUH[1]);
+    //     processPoints.push(sortedUH[1]);
+    //     console.log(stackUH);
 
-        // draw processPoints
-        for(var i = 0; i < stackUH.length-1; i++) {
-            var point1 = stackUH[i];
-            var point2 = stackUH[i+1];
-            drawLine(point1.x, point1.y, point2.x, point2.y, "black");
-        }
-        return;
-    } else {
-        console.log("need more points for convex hull or stack has already been initialized");
-    }
-    if(upperHullCounter.innerNotFinished) {
-        upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
-        console.log(upperHullCounter.innerNotFinished);
-    } else {
-        // inner loop is finished, so execute outer loop
-        var tentativePoint = sortedUH[upperHullCounter.outerCtr];
-        stackUH.push(tentativePoint);
-        processPoints.push(tentativePoint);
-        upperHullCounter.innerNotFinished = true; // reset inner loop not finished
-        // run next inner loop
-        // upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
-    }
+    //     // draw processPoints
+    //     for(var i = 0; i < stackUH.length-1; i++) {
+    //         var point1 = stackUH[i];
+    //         var point2 = stackUH[i+1];
+    //         drawLine(point1.x, point1.y, point2.x, point2.y, "black");
+    //     }
+    //     return;
+    // } else {
+    //     console.log("need more points for convex hull or stack has already been initialized");
+    // }
+    // if(upperHullCounter.innerNotFinished) {
+    //     upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
+    //     console.log(upperHullCounter.innerNotFinished);
+    // } else {
+    //     // inner loop is finished, so execute outer loop
+    //     var tentativePoint = sortedUH[upperHullCounter.outerCtr];
+    //     stackUH.push(tentativePoint);
+    //     processPoints.push(tentativePoint);
+    //     upperHullCounter.innerNotFinished = true; // reset inner loop not finished
+    //     // run next inner loop
+    //     // upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
+    // }
 
-    console.log(stackUH);
+    // console.log(stackUH);
 
-    // draw processPoints
-    for(var i = 0; i < stackUH.length-1; i++) {
-        var point1 = stackUH[i];
-        var point2 = stackUH[i+1];
-        drawLine(point1.x, point1.y, point2.x, point2.y, "black");
-    } 
+    // // draw processPoints
+    // for(var i = 0; i < stackUH.length-1; i++) {
+    //     var point1 = stackUH[i];
+    //     var point2 = stackUH[i+1];
+    //     drawLine(point1.x, point1.y, point2.x, point2.y, "black");
+    // } 
     // for(var i = 0; i < processPoints.length-1; i++) {
     //     var point1 = processPoints[i];
     //     var point2 = processPoints[i+1];
@@ -320,6 +321,24 @@ function orient(p, q, r) {
     var det = (q.x * r.y - r.x * q.y) - (p.x * r.y - r.x * p.y) + (p.x * q.y - q.x * p.y);
 
     return det;
+}
+
+function redraw(freshStack) {
+    svg.selectAll("*").remove();
+    var fresh = Array.from(points);
+    for(var i = 0; i < fresh.length; i++) {
+        // draw point
+        svg.append("circle")
+        .attr("cx", fresh[i].x)
+        .attr("cy", fresh[i].y)
+        .attr("r", cr);
+    }
+
+    for(var i = 0; i < freshStack.length-1; i++) {
+        var point1 = freshStack[i];
+        var point2 = freshStack[i+1];
+        drawLine(point1.x, point1.y, point2.x, point2.y, "black");
+    } 
 }
 
 function sleeper() {
