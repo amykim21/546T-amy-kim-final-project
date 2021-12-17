@@ -13,6 +13,7 @@
 Took the skeleton of how to make a function in V3
 */
 
+var lineID = 0; // unique id for each line on the primal plane; used for deleting lines
 var pointID = 0; // unique id for each point and its dual line
 var points = []; // each point has form {x: x, y: y, pointID: "p"+pointID.toString(), dualLine: line}
                 // each line has form {a1: a1, b1: b1, a2: a2, b2: b2, pointID: point.pointID};
@@ -52,6 +53,72 @@ var dualSvg = d3.select("body")
                 .attr("flex", "auto")
                 .attr("flex-flow", "row nowrap");
 
+// global variables for UH
+function sortByX(arr) {
+    arr.sort((a, b) => {
+        return (a.x-b.x);
+    });
+}
+
+var stackUH = [];
+var sortedUH = Array.from(points);
+sortByX(sortedUH);
+if(sortedUH.length > 1) {
+    stackUH.push(sortedUH[0]);
+    stackUH.push(sortedUH[1]);
+} else {
+    console.log("need more points for convex hull");
+}
+var upperHullCounter = {innerNotFinished: true, outerCtr: 2, lineID: 0};
+
+document.getElementById("stepUHButton").addEventListener("click", function() {
+    // var point = sortedUH[upperHullCounter.outerCtr];
+    if(upperHullCounter.innerNotFinished) {
+        upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
+    } else {
+        // inner loop is finished, so execute outer loop
+        stackUH.push(sortedUH[upperHullCounter.outerCtr]);
+        sortedUH[upperHullCounter.outerCtr] = sortedUH[upperHullCounter.outerCtr] + 1;
+
+        // run next inner loop
+        upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
+
+        // outerLoopUH(point, stackUH);
+
+    }
+});
+
+function innerLoopUH(i, stack) {
+    // draw next tentative line, give id of upperHullCounter.lineID; increment lineID
+    var point = sortedUH[i]; // tentative point
+    var prevPoint = stack[stack.length-1];
+    svg.append("line")
+    .style("stroke", "black")
+    .style("stroke-width", 5)
+    .attr("id", "#UH" + upperHullCounter.lineID)
+    .attr("x1", point.x)
+    .attr("y1", point.y)
+    .attr("x2", prevPoint.x)
+    .attr("y2", prevPoint.y);
+    upperHullCounter.lineID = upperHullCounter.lineID + 1;
+
+    if(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
+        stack.pop();        
+        // if lineID > 0, delete last tentative line
+        if(upperHullCounter.lineID > 0) {
+            d3.select("#UH" + upperHullCounter.lineID).remove();
+            upperHullCounter.lineID = upperHullCounter.lineID - 1;
+        }
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// function outerLoopUH(point, stack) {
+//     stack.push(point);
+// }
 
 document.getElementById("gsButton").addEventListener("click", function() {
     const lowerH = lowerHull();
@@ -121,6 +188,7 @@ document.getElementById("resetButton").addEventListener("click", function() {
     dualSvg.selectAll("*").remove();
 
     points = [];
+    hulls = {upperHull: [], lowerHull: []};
 });
 
 
