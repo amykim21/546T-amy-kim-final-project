@@ -240,6 +240,10 @@ function sleep(ms) {
 async function upperHullAnimation() {
       var stack = []; // will contain convex hull
       var sorted = Array.from(points); // make copy
+
+    redraw(stack); // redraw to show empty stack
+    console.log("calling sleep");
+    await sleep(2000);
   
       // sort points by x-coordinate
       sorted.sort((a, b) => {
@@ -309,6 +313,10 @@ function upperHull() {
 async function lowerHullAnimation() {
     var stack = []; // will contain convex hull
     var sorted = Array.from(points); // make copy
+
+    redraw(stack); // redraw to show empty stack
+    console.log("calling sleep");
+    await sleep(2000);
 
     // sort points by x-coordinate
     sorted.sort((a, b) => {

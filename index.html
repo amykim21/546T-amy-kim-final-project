@@ -23,10 +23,47 @@
     </head>
     <body>
         <h3 class="gs">Graham Scan</h3>
-        <button class="gs" id="gsButton" type="button">Start Graham Scan</button>
-        <button class="gs" id="stepUHButton" type="button">Step</button>
-        <button class="gs" id="stepLHButton" type="button">Step</button>
+        <button class="gs" id="gsButton" type="button">Show Convex Hull</button>
+        <button class="gs" id="stepUHButton" type="button">Show Upper Hull Animation</button>
+        <button class="gs" id="stepLHButton" type="button">Show Lower Hull Animation</button>
         <button class="gs" id="resetButton" type="button">Reset</button>
+        
+        <!-- start of citation: https://students.engineering.wustl.edu/comp_geo_algorithms/graham_scan/grahamScan.html -->
+        <!-- The html layout of the informational visual table was taken from the course simulator link above. -->
+        <!-- The text within was written by me. -->
+        <div style="width: 100%; margin-top: 5px; padding: 4px;">
+            <div style="white-space: pre;">
+                <table style="table-layout: fixed; font-size: small; border-collapse: collapse;">
+                    <tbody>
+                        <tr>
+                            <td>sort all points by increasing x</td>
+                        </tr>
+                        <tr>
+                            <td>initialize empty stack</td>
+                        </tr>
+                        <tr>
+                            <td>push the first and second points to the stack</td>
+                        </tr>
+                        <tr>
+                            <td>for each point</td> 
+                        </tr>
+                        <tr>
+                            <td>    while (stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0)</td>
+                        </tr>
+                        <tr>
+                            <td>        stack.pop()</td>
+                        </tr>
+                        <tr>
+                            <td>    stack.push(point)</td>
+                        </tr>
+                        <tr>
+                            <td>return stack</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- end of citation  -->
         <!-- <h3 class="dp">Dual Plane</h3> -->
         <!-- https://www.w3schools.com/html/html5_canvas.asp -->
         <script type="module" src="./GrahamScan.js"></script>
