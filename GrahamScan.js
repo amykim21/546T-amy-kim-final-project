@@ -127,8 +127,10 @@ document.getElementById("gsButton").addEventListener("click", function() {
     }
 
     // test: try coloring a line purple
-    svg.select("#p"+points[0].pointID).transition().style("stroke", "purple");
+    // svg.select("#p"+points[0].pointID).transition().style("stroke", "purple");
 
+    // disable this button
+    document.getElementById("gsButton").disabled = true;
 });
 
 document.getElementById("resetButton").addEventListener("click", function() {
@@ -137,6 +139,9 @@ document.getElementById("resetButton").addEventListener("click", function() {
 
     points = [];
     hulls = {upperHull: [], lowerHull: []};
+
+    // enable graham scan button
+    document.getElementById("gsButton").disabled = false;
 });
 
 
