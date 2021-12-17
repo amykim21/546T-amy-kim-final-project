@@ -76,10 +76,20 @@ document.getElementById("stepUHButton").addEventListener("click", function() {
     // var point = sortedUH[upperHullCounter.outerCtr];
     sortedUH = Array.from(points);
     sortByX(sortedUH);
+    console.log(sortedUH);
 
     if(sortedUH.length > 1 && stackUH.length == 0) {
         stackUH.push(sortedUH[0]);
         stackUH.push(sortedUH[1]);
+        svg.append("line")
+        .style("stroke", "black")
+        .style("stroke-width", 5)
+        .attr("id", "#UH" + upperHullCounter.lineID)
+        .attr("x1", stackUH[0].x)
+        .attr("y1", stackUH[0].y)
+        .attr("x2", stackUH[1].x)
+        .attr("y2", stackUH[1].y);
+        upperHullCounter.lineID = upperHullCounter.lineID + 1;
     } else {
         console.log("need more points for convex hull or stack has already been initialized");
     }
@@ -89,7 +99,7 @@ document.getElementById("stepUHButton").addEventListener("click", function() {
     } else {
         // inner loop is finished, so execute outer loop
         stackUH.push(sortedUH[upperHullCounter.outerCtr]);
-        sortedUH[upperHullCounter.outerCtr] = sortedUH[upperHullCounter.outerCtr] + 1;
+        // sortedUH[upperHullCounter.outerCtr] = sortedUH[upperHullCounter.outerCtr] + 1;
 
         // run next inner loop
         upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
@@ -103,6 +113,8 @@ function innerLoopUH(i, stack) {
     // draw next tentative line, give id of upperHullCounter.lineID; increment lineID
     var point = sortedUH[i]; // tentative point
     var prevPoint = stack[stack.length-1];
+
+    upperHullCounter.lineID = upperHullCounter.lineID + 1;
     svg.append("line")
     .style("stroke", "black")
     .style("stroke-width", 5)
@@ -111,14 +123,14 @@ function innerLoopUH(i, stack) {
     .attr("y1", point.y)
     .attr("x2", prevPoint.x)
     .attr("y2", prevPoint.y);
-    upperHullCounter.lineID = upperHullCounter.lineID + 1;
 
     if(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
         stack.pop();        
         // if lineID > 0, delete last tentative line
         if(upperHullCounter.lineID > 0) {
-            d3.select("#UH" + upperHullCounter.lineID).remove();
-            upperHullCounter.lineID = upperHullCounter.lineID - 1;
+            svg.selectAll("#UH" + upperHullCounter.lineID).remove();
+            svg.selectAll("#UH" + (upperHullCounter.lineID-1)).remove();
+            upperHullCounter.lineID = upperHullCounter.lineID - 2;
         }
 
         return true;
@@ -191,6 +203,8 @@ document.getElementById("gsButton").addEventListener("click", function() {
         .attr("y2", point2[1]);
     }
 
+    // test: try coloring a line purple
+    svg.select("#p"+points[0].pointID).transition().style("stroke", "purple");
 
 });
 
@@ -199,6 +213,8 @@ document.getElementById("resetButton").addEventListener("click", function() {
     dualSvg.selectAll("*").remove();
 
     points = [];
+    stackUH = [];
+    sortedUH = [];
     hulls = {upperHull: [], lowerHull: []};
 });
 
