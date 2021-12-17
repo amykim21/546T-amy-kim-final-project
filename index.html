@@ -36,28 +36,25 @@
                 <table style="table-layout: fixed; font-size: small; border-collapse: collapse;">
                     <tbody>
                         <tr>
-                            <td>sort all points by increasing x</td>
+                            <td id="sort">sort all points by increasing x and initialize empty stack</td>
                         </tr>
                         <tr>
-                            <td>initialize empty stack</td>
+                            <td id="push">push the first and second points to the stack</td>
                         </tr>
                         <tr>
-                            <td>push the first and second points to the stack</td>
+                            <td id="for">for each point</td> 
                         </tr>
                         <tr>
-                            <td>for each point</td> 
+                            <td id="while">    while (stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) is the wrong direction)</td>
                         </tr>
                         <tr>
-                            <td>    while (stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0)</td>
+                            <td id="stackpop">        stack.pop()</td>
                         </tr>
                         <tr>
-                            <td>        stack.pop()</td>
+                            <td id="stackpush">    stack.push(point)</td>
                         </tr>
                         <tr>
-                            <td>    stack.push(point)</td>
-                        </tr>
-                        <tr>
-                            <td>return stack</td>
+                            <td id="return">return stack</td>
                         </tr>
                     </tbody>
                 </table>

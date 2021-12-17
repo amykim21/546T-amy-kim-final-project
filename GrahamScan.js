@@ -53,7 +53,8 @@ var dualSvg = d3.select("body")
                 .attr("flex", "auto")
                 .attr("flex-flow", "row nowrap");
 
-var table = document.getElementsByTagName("table");
+// var table = document.getElementsByTagName("table");
+var highlightedTableRow = document.getElementById("sort");
 
 
 document.getElementById("stepUHButton").addEventListener("click", function() {
@@ -248,6 +249,8 @@ async function upperHullAnimation() {
     // style.backgroundColor = "tan" // how to make it highlighted
       var stack = []; // will contain convex hull
       var sorted = Array.from(points); // make copy
+      
+    highlightedTableRow.style.backgroundColor = "tan";
 
     redraw(stack); // redraw to show empty stack
     console.log("calling sleep");
@@ -348,6 +351,9 @@ async function lowerHullAnimation() {
 
     for(var i = 2; i < sorted.length; i++) {
         const point = sorted[i];
+        redraw(stack.concat(point));
+        console.log("calling sleep on concatenated stack");
+        await sleep(2000);
         while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) > 0) {
             stack.pop();
             redraw(stack);
