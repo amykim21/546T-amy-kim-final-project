@@ -76,10 +76,20 @@ document.getElementById("stepUHButton").addEventListener("click", function() {
     // var point = sortedUH[upperHullCounter.outerCtr];
     sortedUH = Array.from(points);
     sortByX(sortedUH);
+    console.log(sortedUH);
 
     if(sortedUH.length > 1 && stackUH.length == 0) {
         stackUH.push(sortedUH[0]);
         stackUH.push(sortedUH[1]);
+        svg.append("line")
+        .style("stroke", "black")
+        .style("stroke-width", 5)
+        .attr("id", "#UH" + upperHullCounter.lineID)
+        .attr("x1", stackUH[0].x)
+        .attr("y1", stackUH[0].y)
+        .attr("x2", stackUH[1].x)
+        .attr("y2", stackUH[1].y);
+        upperHullCounter.lineID = upperHullCounter.lineID + 1;
     } else {
         console.log("need more points for convex hull or stack has already been initialized");
     }
@@ -117,7 +127,7 @@ function innerLoopUH(i, stack) {
         stack.pop();        
         // if lineID > 0, delete last tentative line
         if(upperHullCounter.lineID > 0) {
-            d3.select("#UH" + upperHullCounter.lineID).remove();
+            d3.selectAll("#UH" + upperHullCounter.lineID).remove();
             upperHullCounter.lineID = upperHullCounter.lineID - 1;
         }
 
