@@ -18,6 +18,7 @@ var pointID = 0; // unique id for each point and its dual line
 var points = []; // each point has form {x: x, y: y, pointID: "p"+pointID.toString(), dualLine: line}
                 // each line has form {a1: a1, b1: b1, a2: a2, b2: b2, pointID: point.pointID};
 var hulls = {upperHull: [], lowerHull: []};
+var processPoints = []; // contains points that are in process; used for step-through
 var dualLines = []; // dual plane version of points
 
 var x;
@@ -76,11 +77,21 @@ var dualSvg = d3.select("body")
 //       .style("fill", "orange");
 // });
 
+// global variables for UH
+function sortByX(arr) {
+    arr.sort((a, b) => {
+        return (a.x-b.x);
+    });
+}
+var stackUH = [];
+var sortedUH = [];
+var upperHullCounter = {innerNotFinished: true, outerCtr: 2};
+
 document.getElementById("stepUHButton").addEventListener("click", function() {
     svg.selectAll("*").remove();
 
     // draw points
-    var fresh = Array.copy(point);
+    var fresh = Array.from(points);
     for(var i = 0; i < fresh.length; i++) {
         // draw point
         svg.append("circle")
@@ -89,8 +100,54 @@ document.getElementById("stepUHButton").addEventListener("click", function() {
         .attr("r", cr);
     }
 
-    // draw lines
+    // update processPoints
+    sortedUH = Array.from(points);
+    sortByX(sortedUH);
+    console.log(sortedUH);
+    // initialization
+    if(sortedUH.length > 1 && stackUH.length == 0) {
+        stackUH.push(sortedUH[0]);
+        processPoints.push(sortedUH[0]);
+
+        stackUH.push(sortedUH[1]);
+        processPoints.push(sortedUH[1]);
+    } else {
+        console.log("need more points for convex hull or stack has already been initialized");
+    }
+    if(upperHullCounter.innerNotFinished) {
+        upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
+    } else {
+        // inner loop is finished, so execute outer loop
+        var tentativePoint = sortedUH[upperHullCounter.outerCtr];
+        stackUH.push(tentativePoint);
+        processPoints.push(tentativePoint);
+        // run next inner loop
+        upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
+    }
+
+    // draw processPoints
+    for(var i = 0; i < stackUH.length-1; i++) {
+        var point1 = stackUH[i];
+        var point2 = stackUH[i+1];
+        drawLine(point1.x, point1.y, point2.x, point2.y, "black");
+    } 
+
+
+    
 });
+
+
+function innerLoopUH(i, stack) {
+    var point = sortedUH[i]; // tentative point
+    var prevPoint = stack[stack.length-1];
+    if(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
+        stack.pop();
+        processPoints.pop();
+        return true;
+    } else {
+        return false;
+    }
+}
 
 document.getElementById("gsButton").addEventListener("click", function() {
     const lowerH = lowerHull();
