@@ -61,18 +61,29 @@ function sortByX(arr) {
 }
 
 var stackUH = [];
-var sortedUH = Array.from(points);
-sortByX(sortedUH);
-if(sortedUH.length > 1) {
-    stackUH.push(sortedUH[0]);
-    stackUH.push(sortedUH[1]);
-} else {
-    console.log("need more points for convex hull");
-}
+var sortedUH = [];
+// sortByX(sortedUH);
+
+// if(sortedUH.length > 1 && stackUH.length == 0) {
+//     stackUH.push(sortedUH[0]);
+//     stackUH.push(sortedUH[1]);
+// } else {
+//     console.log("need more points for convex hull");
+// }
 var upperHullCounter = {innerNotFinished: true, outerCtr: 2, lineID: 0};
 
 document.getElementById("stepUHButton").addEventListener("click", function() {
     // var point = sortedUH[upperHullCounter.outerCtr];
+    sortedUH = Array.from(points);
+    sortByX(sortedUH);
+
+    if(sortedUH.length > 1 && stackUH.length == 0) {
+        stackUH.push(sortedUH[0]);
+        stackUH.push(sortedUH[1]);
+    } else {
+        console.log("need more points for convex hull or stack has already been initialized");
+    }
+
     if(upperHullCounter.innerNotFinished) {
         upperHullCounter.innerNotFinished = innerLoopUH(upperHullCounter.outerCtr, stackUH);
     } else {
