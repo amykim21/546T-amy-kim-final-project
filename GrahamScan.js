@@ -274,6 +274,7 @@ async function upperHullAnimation() {
       }
       hulls.upperHull = stack;
       document.getElementById("for").style.backgroundColor = "white";
+      document.getElementById("stackpush").style.backgroundColor = "white";
       document.getElementById("return").style.backgroundColor = "tan";
       return stack; // array of points
   }
@@ -345,6 +346,9 @@ async function lowerHullAnimation() {
         await sleep(2000);
         while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) > 0) {
             stack.pop();
+
+            document.getElementById("for").style.backgroundColor = "white";
+            document.getElementById("stackpop").style.backgroundColor = "tan";
             redraw(stack);
             await sleep(2000);
         }
@@ -357,6 +361,7 @@ async function lowerHullAnimation() {
     }
     hulls.lowerHull = stack;
     document.getElementById("for").style.backgroundColor = "white";
+    document.getElementById("stackpush").style.backgroundColor = "white";
     document.getElementById("return").style.backgroundColor = "tan";
     return stack;
 }
