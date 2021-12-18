@@ -1,14 +1,3 @@
-// https://www.freecodecamp.org/news/learn-d3-js-in-5-minutes-c5ec29fb0725/
-// import * as d3 from "d3"; // not necessary it seems
-// import * as d3 from "./node_modules/d3";
-// import * as d3 from "https://cdn.skypack.dev/d3@7";
-// import { sort } from "d3";
-// import * as d3 from "https://d3js.org/d3.v4.min.js";
-
-// d3.select('h3').style('color', 'blue');
-// d3.select('h3').style('font-size', '24px');
-// d3.select('div').style('display', 'inline-block');
-
 /* https://www.tutorialsteacher.com/d3js/function-of-data-in-d3js
 Took the skeleton of how to make a function in V3
 */
@@ -27,9 +16,6 @@ const cr = 5; // point radius, in pixels
 var width = 500;
 var height = 500;
 
-/* https://www.tutorialsteacher.com/codeeditor?cid=d3-37
-Skeleton for appending a circle to an svg element
-*/
 //Create SVG element
 var svg = d3.select("body")
             .append("svg")
@@ -108,11 +94,10 @@ document.getElementById("gsButton").addEventListener("click", function() {
         .attr("y2", point2[1]);
     }
 
-    // test: try coloring a line purple
-    // svg.select("#p"+points[0].pointID).transition().style("stroke", "purple");
-
-    // disable this button
+    // disable buttons
     document.getElementById("gsButton").disabled = true;
+    // document.getElementById("stepUHButton").disabled = true;
+    // document.getElementById("stepLHButton").disabled = true;
 });
 
 document.getElementById("resetButton").addEventListener("click", function() {
@@ -144,6 +129,9 @@ d3.select("svg")
     ++pointID;
     
     // draw point
+    /* https://www.tutorialsteacher.com/codeeditor?cid=d3-37
+    Skeleton for appending a circle to an svg element
+    */
     svg.append("circle")
     .attr("cx", x)
     .attr("cy", y)
@@ -235,8 +223,8 @@ function sleep(ms) {
 }
 
 async function upperHullAnimation() {
-      var stack = []; // will contain convex hull
-      var sorted = Array.from(points); // make copy
+    var stack = []; // will contain convex hull
+    var sorted = Array.from(points); // make copy
 
     document.getElementById("return").style.backgroundColor = "white";
     document.getElementById("sort").style.backgroundColor = "tan";
@@ -244,42 +232,41 @@ async function upperHullAnimation() {
     redraw(stack); // redraw to show empty stack
     await sleep(2000);
   
-      // sort points by x-coordinate
-      sorted.sort((a, b) => {
-          return (a.x-b.x);
-      });
+    // sort points by x-coordinate
+    sorted.sort((a, b) => {
+        return (a.x-b.x);
+    });
   
-      if(sorted.length > 1) {
+    if(sorted.length > 1) {
         stack.push(sorted[0]);
         stack.push(sorted[1]);
 
         document.getElementById("sort").style.backgroundColor = "white";
-          redraw(stack);
-          await sleep(2000);
-      } else {
+        redraw(stack);
+        await sleep(2000);
+    } else {
           console.log("need more points for convex hull");
           return stack;
-      }
+    }
   
-      for(var i = 2; i < sorted.length; i++) {
-          const point = sorted[i];
+    for(var i = 2; i < sorted.length; i++) {
+        const point = sorted[i];
 
-          document.getElementById("for").style.backgroundColor = "tan";
-          redraw(stack.concat(point));
-          await sleep(2000);
+        document.getElementById("for").style.backgroundColor = "tan";
+        document.getElementById("stackpush").style.backgroundColor = "white";
+        redraw(stack.concat(point));
+        await sleep(2000);
 
           while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) < 0) {
               stack.pop();
 
               document.getElementById("for").style.backgroundColor = "white";
-              document.getElementById("while").style.backgroundColor = "tan";
               document.getElementById("stackpop").style.backgroundColor = "tan";
               redraw(stack);
               await sleep(2000);
           }
           stack.push(point);
 
-          document.getElementById("while").style.backgroundColor = "white";
           document.getElementById("stackpop").style.backgroundColor = "white";
           document.getElementById("stackpush").style.backgroundColor = "tan";
           redraw(stack);
@@ -287,7 +274,6 @@ async function upperHullAnimation() {
       }
       hulls.upperHull = stack;
       document.getElementById("for").style.backgroundColor = "white";
-      document.getElementById("while").style.backgroundColor = "white";
       document.getElementById("return").style.backgroundColor = "tan";
       return stack; // array of points
   }
@@ -327,6 +313,9 @@ async function lowerHullAnimation() {
     var stack = []; // will contain convex hull
     var sorted = Array.from(points); // make copy
 
+    document.getElementById("return").style.backgroundColor = "white";
+    document.getElementById("sort").style.backgroundColor = "tan";
+
     redraw(stack); // redraw to show empty stack
     await sleep(2000);
 
@@ -338,6 +327,8 @@ async function lowerHullAnimation() {
     if(sorted.length > 1) {
         stack.push(sorted[0]);
         stack.push(sorted[1]);
+
+        document.getElementById("sort").style.backgroundColor = "white";
         redraw(stack);
         await sleep(2000);
     } else {
@@ -347,6 +338,9 @@ async function lowerHullAnimation() {
 
     for(var i = 2; i < sorted.length; i++) {
         const point = sorted[i];
+
+        document.getElementById("for").style.backgroundColor = "tan";
+        document.getElementById("stackpush").style.backgroundColor = "white";
         redraw(stack.concat(point));
         await sleep(2000);
         while(stack.length > 1 && orient(stack[stack.length-2], stack[stack.length-1], point) > 0) {
@@ -355,10 +349,15 @@ async function lowerHullAnimation() {
             await sleep(2000);
         }
         stack.push(point);
+
+        document.getElementById("stackpop").style.backgroundColor = "white";
+        document.getElementById("stackpush").style.backgroundColor = "tan";
         redraw(stack);
         await sleep(2000);
     }
     hulls.lowerHull = stack;
+    document.getElementById("for").style.backgroundColor = "white";
+    document.getElementById("return").style.backgroundColor = "tan";
     return stack;
 }
 
