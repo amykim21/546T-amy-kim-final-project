@@ -8,7 +8,7 @@ Amy Kim
 
 Final Project
 
-Applet
+Applet:https://amykim21.github.io/
 
 Features:
 The upper frame shows the primal plane, and the lower frame shows the dual plane.
