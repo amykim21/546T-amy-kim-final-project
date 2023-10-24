@@ -10,8 +10,9 @@ Final Project
 
 Project Location: https://amykim21.github.io/
 
-Description:
-Visualization Applet for the Graham Scan Algorithm, which allows us to find the convex hull of a set of points.
+Description: Visualization Applet for the Graham Scan Algorithm, which finds the convex hull of a set of points.  This applet visualizes the state of a user-defined set of points at each step of the Graham Scan Algorithm.
+
+Demo Video: https://youtu.be/BnSIgB6N15k
 
 Features:
 The upper frame shows the primal plane, and the lower frame shows the dual plane.
