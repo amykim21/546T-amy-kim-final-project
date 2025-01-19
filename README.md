@@ -8,7 +8,7 @@ Amy Kim
 
 Final Project
 
-Project Location: [https://amykim21.github.io/](https://amykim21.github.io/grahamscan/)
+Project Location: [https://amykim21.github.io/grahamscan/](https://amykim21.github.io/grahamscan/)
 
 Description: Visualization Applet for the Graham Scan Algorithm, which finds the convex hull of a set of points.  This applet visualizes the state of a user-defined set of points at each step of the Graham Scan Algorithm.
 
